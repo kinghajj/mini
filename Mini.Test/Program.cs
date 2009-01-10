@@ -7,10 +7,10 @@ namespace Mini.Test
         static void Main(string[] args)
         {
             var ini = new IniFile("test.ini");
-            Console.WriteLine("Test\'s comment:\n\'{0}\'", ini["Test"].Comment);
+            /*Console.WriteLine("Test\'s comment:\n\'{0}\'", ini["Test"].Comment);
             if(ini["Test"].Comment == String.Empty)
                 Console.WriteLine("Comment is empty!");
-            Console.WriteLine("*Drum roll* -- {0}", ini["Test"]["Hello"].Value);
+            Console.WriteLine("*Drum roll* -- \'{0}\'", ini["Test"]["Hello"].Value);*/
             ini.SaveAs("test2.ini");
             /*var parser = new IniPatternMatcher(new StreamReader(File.Open("test.ini", FileMode.Open)));
             while(!parser.EndOfStream)

@@ -136,17 +136,10 @@ namespace Mini
         internal void Write(StreamWriter writer)
         {
             if(Comment != String.Empty)
-            {
-                writer.Write("; ");
-                foreach(char c in Comment)
-                {
-                    if(c == '\n')
-                        writer.Write("\n; ");
-                    else
-                        writer.Write(c);
-                }
-                writer.WriteLine();
-            }
+                foreach(var comment in
+                        Comment.Split(Environment.NewLine.ToCharArray()))
+                    writer.WriteLine("; {0}", comment);
+
             writer.WriteLine("[{0}]", Name);
             foreach(var setting in this)
                 setting.Write(writer);

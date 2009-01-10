@@ -57,20 +57,20 @@ namespace Mini
          * which are the comment, then the string ends.
          */
         private static string section =
-            @"^\s*\[\s*(?<name>[\w\s]*\w)\s*\]\s*;*\s?(?<comment>.*)$";
+            @"^\s*\[\s*(?<name>[\w\s\.]*\w)\s*\]\s*;*\s?(?<comment>.*)$";
         private static string setting =
             /* Settings start with any number of spaces, then one or more word
              * characters, which are the name, then any number of spaces, an
              * equal sign, then any number of spaces...
              */
             @"^\s*(?<name>\w+)\s*=\s*" +
-            /* ...then any number of non-semicolon characters and at least one
-             * non-space, non-semicolon character, which are the value, then by
-             * any number of spaces...
+            /* ...then any number of non-semicolon characters, which are the
+             * value, then by any number of spaces...
              */
-            @"(?<value>[^\;]*[^\s\;])\s*" +
+            @"(?<value>[^\;]*)\s*" +
             /* ...then by any number of semicolons, possibly a space, then any
-             * number of characters which are the comment, then the string ends.
+             * number of characters, which are the comment, then the string
+             * ends.
              */
             @";*\s?(?<comment>.*)$";
         private Match last_match = null;
@@ -91,62 +91,31 @@ namespace Mini
             IniPatternKind kind = IniPatternKind.None;
             Group group;
 
-            last_comment = last_name = last_value = null;
+            // Reset the comment, name, and value to empty.
+            last_comment = last_name = last_value = string.Empty;
 
+            // Read a line from the stream and try to match it with a pattern.
             if(!stream.EndOfStream)
             {
                 string line = stream.ReadLine();
                 kind = Find(line);
             }
 
+            // If the match was successful,
             if(last_match != null)
             {
+                // If the match produced a comment, save it.
                 if((group = last_match.Groups["comment"]) != null)
                     last_comment = group.Value;
+                // If the match produced a name, save it.
                 if((group = last_match.Groups["name"]) != null)
                     last_name = group.Value;
+                // If the match produced a value, save it.
                 if((group = last_match.Groups["value"]) != null)
                     last_value = group.Value;
             }
 
             return kind;
-        }
-
-        /// <summary>
-        /// Returns the kind of pattern that matches the input.
-        /// </summary>
-        private IniPatternKind Find(string input)
-        {
-            var found_kind = IniPatternKind.None;
-
-            foreach(IniPatternKind kind in Enum.GetValues(typeof(IniPatternKind)))
-            {
-                string pattern = GetPattern(kind);
-                if(pattern != null)
-                {
-                    Match match = Regex.Match(input, pattern);
-                    if(match.Success)
-                    {
-                        found_kind = kind;
-                        last_match = match;
-                        break;
-                    }
-                }
-            }
-
-            return found_kind;
-        }
-
-
-        /// <summary>
-        /// The last parsed comment.
-        /// </summary>
-        public string LastComment
-        {
-            get
-            {
-                return last_comment;
-            }
         }
 
         /// <summary>
@@ -161,7 +130,18 @@ namespace Mini
         }
 
         /// <summary>
-        /// The last parsed name.
+        /// The last parsed comment.
+        /// </summary>
+        public string LastComment
+        {
+            get
+            {
+                return last_comment;
+            }
+        }
+
+        /// <summary>
+        /// The most recently parsed name.
         /// </summary>
         public string LastName
         {
@@ -172,7 +152,7 @@ namespace Mini
         }
 
         /// <summary>
-        /// The last parsed value.
+        /// The most recently parsed value.
         /// </summary>
         public string LastValue
         {
@@ -183,14 +163,32 @@ namespace Mini
         }
 
         /// <summary>
-        /// The last match found with FindPattern().
+        /// Returns the kind of pattern that matches the input.
         /// </summary>
-        public Match LastMatch
+        private IniPatternKind Find(string input)
         {
-            get
+            var found_kind = IniPatternKind.None;
+
+            // Try to match the input against all know INI kinds.
+            foreach(IniPatternKind kind in Enum.GetValues(typeof(IniPatternKind)))
             {
-                return last_match;
+                // If there's a pattern for this kind,
+                string pattern = GetPattern(kind);
+                if(pattern != null)
+                {
+                    // Try to match it against the pattern for that kind.
+                    Match match = Regex.Match(input, pattern);
+                    // If the match works, store it.
+                    if(match.Success)
+                    {
+                        found_kind = kind;
+                        last_match = match;
+                        break;
+                    }
+                }
             }
+
+            return found_kind;
         }
 
         /// <summary>

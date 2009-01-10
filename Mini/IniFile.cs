@@ -52,7 +52,8 @@ namespace Mini
         public IniFile(StreamReader stream)
             : this()
         {
-            var parser = new IniParser(this, stream);
+            IniParser.Parse(this, stream);
+            stream.Close();
         }
 
         /// <summary>

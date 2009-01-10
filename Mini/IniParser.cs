@@ -43,23 +43,16 @@ namespace Mini
     /// </summary>
     public class IniParser
     {
-        private IniFile ini;
-        private StreamReader stream;
-        private IniPatternMatcher matcher;
-
-        public IniParser(IniFile ini, StreamReader stream)
-        {
-            this.ini = ini;
-            this.stream = stream;
-            matcher = new IniPatternMatcher(stream);
-            Parse();
-        }
-
         /// <summary>
         /// Parses the INI.
         /// </summary>
-        private void Parse()
+        /// <param name="ini">The IniFile object into which the stream will be
+        /// parsed.</param>
+        /// <param name="stream">An input stream from which the INI will be
+        /// parsed.</param>
+        internal static void Parse(IniFile ini, StreamReader stream)
         {
+            var matcher = new IniPatternMatcher(stream);
             string comment = string.Empty;
             IniSection section = null;
             IniSetting setting = null;
@@ -98,7 +91,7 @@ namespace Mini
         /// <param name="built">The current built-up comment.</param>
         /// <param name="last">The last read comment.</param>
         /// <returns>A new, joined comment.</returns>
-        private string JoinComments(string current, string built, string last)
+        private static string JoinComments(string current, string built, string last)
         {
             string ret = string.Empty;
 
