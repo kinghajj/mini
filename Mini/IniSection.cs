@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2009 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -16,18 +16,22 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
+/* IniSection.cs - Represents a section in an INI file.
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Mini
 {
-    public class IniSection : IEnumerable<IniSetting>
+    public class IniSection : IniPart, IEnumerable<IniSetting>
     {
+        private IniComment comment;
         internal IniFile ini;
-        private List<IniSetting> settings;
+        internal List<IniSetting> settings;
 
+        #region Constructors
         /// <summary>
         /// Create a new INI section with the given name, comment, and file.
         /// </summary>
@@ -43,11 +47,11 @@ namespace Mini
         internal IniSection(string name, string comment, IniFile ini)
         {
             this.ini = ini;
-            Comment = comment;
-            Name = name;
+            this.comment = new IniComment(comment);
             settings = new List<IniSetting>();
-            // -- TODO --
+            Name = name;
         }
+        #endregion
 
         #region Methods
         /// <summary>
@@ -55,7 +59,20 @@ namespace Mini
         /// </summary>
         public void Remove()
         {
-            ini.sections.Remove(this);
+            ini.parts.Remove(this);
+        }
+
+        /// <summary>
+        /// Writes the section to an output stream.
+        /// </summary>
+        /// <param name="writer">The stream to write to.</param>
+        override internal void Write(StreamWriter writer)
+        {
+            comment.Write(writer);
+            writer.WriteLine("[{0}]", Name);
+            foreach(var setting in this)
+                setting.Write(writer);
+            writer.WriteLine();
         }
         #endregion
 
@@ -120,7 +137,17 @@ namespace Mini
         /// <value>
         /// Get or set a section's comment.
         /// </value>
-        public string Comment { get; set; }
+        public string Comment
+        {
+            get
+            {
+                return comment.Comment;
+            }
+            set
+            {
+                comment.Comment = value;
+            }
+        }
 
         /// <value>
         /// Get or set a section's name.
@@ -132,18 +159,5 @@ namespace Mini
         /// </value>
         public IniFile Ini { get { return ini; } }
         #endregion
-
-        internal void Write(StreamWriter writer)
-        {
-            if(Comment != String.Empty)
-                foreach(var comment in
-                        Comment.Split(Environment.NewLine.ToCharArray()))
-                    writer.WriteLine("; {0}", comment);
-
-            writer.WriteLine("[{0}]", Name);
-            foreach(var setting in this)
-                setting.Write(writer);
-            writer.WriteLine();
-        }
     }
 }

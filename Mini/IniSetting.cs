@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2009 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -16,15 +16,19 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
+/* IniSetting.cs - Represents a setting in an INI file.
+ */
+
 using System.IO;
 
 namespace Mini
 {
-    public class IniSetting
+    public class IniSetting : IniPart
     {
+        private IniComment comment;
         private IniSection section;
 
+        #region Constructors
         /// <summary>
         /// Creates a new setting with a key, value, and section.
         /// </summary>
@@ -42,14 +46,46 @@ namespace Mini
             Key = key;
             Value = _value;
             this.section = section;
-            this.Comment = string.Empty;
+            this.comment = new IniComment(string.Empty);
         }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Removes a setting from its section.
+        /// </summary>
+        public void Remove()
+        {
+            section.settings.Remove(this);
+        }
+
+        /// <summary>
+        /// Writes the setting to an output stream.
+        /// </summary>
+        /// <param name="writer">The stream to write to.</param>
+        override internal void Write(StreamWriter writer)
+        {
+            comment.Write(writer);
+            writer.WriteLine("{0} = {1}", Key, Value);
+        }
+        #endregion
 
         #region Properties
         /// <summary>
         /// Gets or sets the setting's comment.
         /// </summary>
-        public string Comment { get; set; }
+        public string Comment
+        {
+            get
+            {
+                return comment.Comment;
+            }
+            set
+            {
+                comment.Comment = value;
+            }
+        }
+
         /// <value>
         /// Gets or sets a setting's key.
         /// </value>
@@ -65,14 +101,5 @@ namespace Mini
         /// </value>
         public string Value { get; set; }
         #endregion
-
-        internal void Write(StreamWriter writer)
-        {
-            if(Comment != String.Empty)
-                foreach(var comment in
-                        Comment.Split(Environment.NewLine.ToCharArray()))
-                    writer.WriteLine("; {0}", comment);
-            writer.WriteLine("{0} = {1}", Key, Value);
-        }
     }
 }

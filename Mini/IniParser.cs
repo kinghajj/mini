@@ -1,4 +1,4 @@
-﻿/* Copyright (C) 2008 Samuel Fredrickson <kinghajj@gmail.com>
+﻿/* Copyright (C) 2009 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -31,7 +31,8 @@
  * directly before a section or setting are joined with that section/setting's
  * "true" comment on parsing.
  * 
- * Lone comments are currently ignored.
+ * Lone comments are currently ignored, which means that they will not be saved.
+ * This will be corrected in the future.
  */
 
 using System.IO;
@@ -78,6 +79,8 @@ namespace Mini
                         comment = string.Empty;
                         break;
                     case IniPatternKind.None:
+                        if(comment != string.Empty)
+                            ini.parts.Add(new IniComment(comment, true));
                         comment = string.Empty;
                         break;
                 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2009 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -22,6 +22,7 @@
  * the library, and, hopefully, is easy to use.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +32,7 @@ namespace Mini
 {
     public class IniFile : IEnumerable<IniSection>
     {
-        internal List<IniSection> sections;
+        internal List<IniPart> parts;
 
         #region Constructors
         /// <summary>
@@ -39,7 +40,7 @@ namespace Mini
         /// </summary>
         public IniFile()
         {
-            sections = new List<IniSection>();
+            parts = new List<IniPart>();
         }
 
         /// <summary>
@@ -101,10 +102,11 @@ namespace Mini
         public void SaveAs(string path)
         {
             var writer = new StreamWriter(path);
-            foreach(var section in this)
-                section.Write(writer);
+            foreach(var part in parts)
+                part.Write(writer);
             writer.Close();
         }
+
         #endregion
 
         #region Enumerator
@@ -116,8 +118,11 @@ namespace Mini
         /// </returns>
         public IEnumerator<IniSection> GetEnumerator()
         {
-            foreach(IniSection section in sections)
-                yield return section;
+            foreach(var part in parts)
+                if(part is IniSection)
+                    yield return (IniSection)part;
+            //foreach(IniSection section in sections)
+            //    yield return section;
         }
         
         /// <summary>
@@ -149,7 +154,7 @@ namespace Mini
                 if(found == null)
                 {
                     found = new IniSection(name, string.Empty, this);
-                    sections.Add(found);
+                    parts.Add(found);
                 }
 
                 return found;
@@ -157,13 +162,13 @@ namespace Mini
         }
 
         /// <summary>
-        /// Gets a file's section via its index.
+        /// Gets a file's part via its index.
         /// </summary>
-        public IniSection this[int index]
+        public IniPart this[int index]
         {
             get
             {
-                return sections[index];
+                return parts[index];
             }
         }
         #endregion
