@@ -42,7 +42,7 @@ namespace Mini
     /// <summary>
     /// Parses a stream into the INI data structures.
     /// </summary>
-    public class IniParser
+    public static class IniParser
     {
         /// <summary>
         /// Parses the INI.
@@ -79,7 +79,7 @@ namespace Mini
                         comment = string.Empty;
                         break;
                     case IniPatternKind.None:
-                        if(comment != string.Empty)
+                        if(!string.IsNullOrEmpty(comment))
                             ini.parts.Add(new IniComment(comment, true));
                         comment = string.Empty;
                         break;
@@ -98,9 +98,9 @@ namespace Mini
         {
             string ret = string.Empty;
 
-            if(current == string.Empty)
+            if(string.IsNullOrEmpty(current))
             {
-                if(built == string.Empty)
+                if(string.IsNullOrEmpty(built))
                     ret = last;
                 else
                     ret = built + "\n" + last;

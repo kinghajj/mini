@@ -42,7 +42,7 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         override internal void Write(System.IO.StreamWriter writer)
         {
-            if(Comment != String.Empty)
+            if(!String.IsNullOrEmpty(Comment))
                 foreach(var comment in
                         Comment.Split(Environment.NewLine.ToCharArray()))
                     writer.WriteLine("; {0}", comment);

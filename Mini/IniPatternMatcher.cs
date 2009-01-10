@@ -73,7 +73,7 @@ namespace Mini
              * ends.
              */
             @";*\s?(?<comment>.*)$";
-        private Match last_match = null;
+        private Match last_match;
         private StreamReader stream;
         private string last_comment, last_name, last_value;
 
