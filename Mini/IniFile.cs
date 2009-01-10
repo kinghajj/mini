@@ -53,7 +53,43 @@ namespace Mini
         public IniFile(StreamReader stream)
             : this()
         {
-            IniParser.Parse(this, stream);
+            var matcher = new IniPatternMatcher(stream);
+            string comment = string.Empty;
+            IniSection section = null;
+            IniSetting setting = null;
+
+            while(!matcher.EndOfStream)
+            {
+                var kind = matcher.GetNextPattern();
+
+                switch(kind)
+                {
+                    case IniPatternKind.Comment:
+                        comment = JoinComments(string.Empty, comment, matcher.LastComment);
+                        break;
+                    case IniPatternKind.Section:
+                        section = this[matcher.LastName];
+                        section.Comment = JoinComments(section.Comment, comment, matcher.LastComment);
+                        comment = string.Empty;
+                        break;
+                    case IniPatternKind.Setting:
+                        if(section != null)
+                        {
+                            setting = section[matcher.LastName];
+                            setting.Comment = JoinComments(setting.Comment,
+                                                           comment,
+                                                           matcher.LastComment);
+                            setting.Value = matcher.LastValue;
+                            comment = string.Empty;
+                        }
+                        break;
+                    case IniPatternKind.None:
+                        if(!string.IsNullOrEmpty(comment))
+                            parts.Add(new IniComment(comment, true));
+                        comment = string.Empty;
+                        break;
+                }
+            }
             stream.Close();
         }
 
@@ -107,6 +143,29 @@ namespace Mini
             writer.Close();
         }
 
+        /// <summary>
+        /// Joins together multiple comments.
+        /// </summary>
+        /// <param name="current">The current comment.</param>
+        /// <param name="built">The current built-up comment.</param>
+        /// <param name="last">The last read comment.</param>
+        /// <returns>A new, joined comment.</returns>
+        private static string JoinComments(string current, string built, string last)
+        {
+            string ret = string.Empty;
+
+            if(string.IsNullOrEmpty(current))
+            {
+                if(string.IsNullOrEmpty(built))
+                    ret = last;
+                else
+                    ret = built + "\n" + last;
+            }
+            else
+                ret = current + "\n" + built + last;
+
+            return ret;
+        }
         #endregion
 
         #region Enumerator

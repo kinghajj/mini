@@ -16,6 +16,13 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* IniComment.cs - Represents a comment in an INI file.
+ * 
+ * Usually, these objects are only created for "lone" comments, because other
+ * INI parts keep track of their comments separately, but they do use this class
+ * to write their comments to an output stream.
+ */
+
 using System;
 
 namespace Mini

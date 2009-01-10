@@ -35,7 +35,6 @@
     <Compile Include="IniPart.cs" />
     <Compile Include="IniPatternMatcher.cs" />
     <Compile Include="IniFile.cs" />
-    <Compile Include="IniParser.cs" />
     <Compile Include="IniSection.cs" />
     <Compile Include="IniSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

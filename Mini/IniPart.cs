@@ -16,6 +16,13 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* IniPart.cs - An abstract class that represents part of an INI file.
+ * 
+ * The only thing that really unites the various parts of an INI is that they
+ * can be written to an output stream, so that's all that's required currently.
+ * Later, other methods may be required.
+ */
+
 using System;
 using System.IO;
 

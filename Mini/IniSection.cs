@@ -27,7 +27,6 @@ namespace Mini
 {
     public class IniSection : IniPart, IEnumerable<IniSetting>
     {
-        private IniComment comment;
         internal IniFile ini;
         internal List<IniSetting> settings;
 
@@ -47,8 +46,8 @@ namespace Mini
         internal IniSection(string name, string comment, IniFile ini)
         {
             this.ini = ini;
-            this.comment = new IniComment(comment);
             settings = new List<IniSetting>();
+            Comment = comment;
             Name = name;
         }
         #endregion
@@ -68,7 +67,7 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         override internal void Write(StreamWriter writer)
         {
-            comment.Write(writer);
+            new IniComment(Comment).Write(writer);
             writer.WriteLine("[{0}]", Name);
             foreach(var setting in this)
                 setting.Write(writer);
@@ -139,14 +138,8 @@ namespace Mini
         /// </value>
         public string Comment
         {
-            get
-            {
-                return comment.Comment;
-            }
-            set
-            {
-                comment.Comment = value;
-            }
+            get;
+            set;
         }
 
         /// <value>
