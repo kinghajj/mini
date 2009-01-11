@@ -44,44 +44,18 @@ namespace Mini
     /// </summary>
     public class IniPatternMatcher
     {
-        /* Comments start with any number of spaces, then a semicolon, possibly
-         * followed by a space, then any number of characters, which are the
-         * comment, then the string ends.
-         */
-        private static string comment =
-            @"^\s*;+\s?(?<comment>.*)$";
-        /* Sections start with any number of spaces, then a [, then any number
-         * of spaces, then one or more characters, which are the name, then any
-         * number of spaces, then a ], then any number of spaces, then possibly
-         * any number of semicolons, then possibly any number of characters,
-         * which are the comment, then the string ends.
-         */
-        private static string section =
-            @"^\s*\[\s*(?<name>[\w\s\.]*\w)\s*\]\s*;*\s?(?<comment>.*)$";
-        private static string setting =
-            /* Settings start with any number of spaces, then one or more word
-             * characters, which are the name, then any number of spaces, an
-             * equal sign, then any number of spaces...
-             */
-            @"^\s*(?<name>\w+)\s*=\s*" +
-            /* ...then any number of non-semicolon characters, which are the
-             * value, then by any number of spaces...
-             */
-            @"(?<value>[^\;]*)\s*" +
-            /* ...then by any number of semicolons, possibly a space, then any
-             * number of characters, which are the comment, then the string
-             * ends.
-             */
-            @";*\s?(?<comment>.*)$";
         private Match last_match;
         private StreamReader stream;
         private string last_comment, last_name, last_value;
 
+        #region Constructors
         public IniPatternMatcher(StreamReader input)
         {
             stream = input;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Gets the kind of the next pattern in the stream, and stores the
         /// matched data.
@@ -89,7 +63,6 @@ namespace Mini
         public IniPatternKind GetNextPattern()
         {
             IniPatternKind kind = IniPatternKind.None;
-            Group group;
 
             // Reset the comment, name, and value to empty.
             last_comment = last_name = last_value = string.Empty;
@@ -102,8 +75,9 @@ namespace Mini
             }
 
             // If the match was successful,
-            if(last_match != null)
+            if(kind != IniPatternKind.None)
             {
+                Group group;
                 // If the match produced a comment, save it.
                 if((group = last_match.Groups["comment"]) != null)
                     last_comment = group.Value;
@@ -118,6 +92,61 @@ namespace Mini
             return kind;
         }
 
+        /// <summary>
+        /// Returns the kind of pattern that matches the input.
+        /// </summary>
+        private IniPatternKind Find(string input)
+        {
+            var found_kind = IniPatternKind.None;
+
+            // Try to match the input against all know INI kinds.
+            foreach(IniPatternKind kind in
+                    Enum.GetValues(typeof(IniPatternKind)))
+            {
+                // If there's a pattern for this kind,
+                string pattern = GetPattern(kind);
+                if(!string.IsNullOrEmpty(pattern))
+                {
+                    // Try to match it against the pattern for that kind.
+                    var match = Regex.Match(input, pattern);
+                    // If the match works, store it.
+                    if(match.Success)
+                    {
+                        found_kind = kind;
+                        last_match = match;
+                        break;
+                    }
+                }
+            }
+
+            return found_kind;
+        }
+
+        /// <summary>
+        /// Returns the pattern string for a kind of pattern.
+        /// </summary>
+        private string GetPattern(IniPatternKind kind)
+        {
+            string pattern = string.Empty;
+
+            switch(kind)
+            {
+                case IniPatternKind.Comment:
+                    pattern = comment;
+                    break;
+                case IniPatternKind.Section:
+                    pattern = section;
+                    break;
+                case IniPatternKind.Setting:
+                    pattern = setting;
+                    break;
+            }
+
+            return pattern;
+        }
+        #endregion
+
+        #region Properties
         /// <summary>
         /// Returns true if the stream is finished.
         /// </summary>
@@ -161,57 +190,38 @@ namespace Mini
                 return last_value;
             }
         }
+        #endregion
 
-        /// <summary>
-        /// Returns the kind of pattern that matches the input.
-        /// </summary>
-        private IniPatternKind Find(string input)
-        {
-            var found_kind = IniPatternKind.None;
-
-            // Try to match the input against all know INI kinds.
-            foreach(IniPatternKind kind in Enum.GetValues(typeof(IniPatternKind)))
-            {
-                // If there's a pattern for this kind,
-                string pattern = GetPattern(kind);
-                if(pattern != null)
-                {
-                    // Try to match it against the pattern for that kind.
-                    Match match = Regex.Match(input, pattern);
-                    // If the match works, store it.
-                    if(match.Success)
-                    {
-                        found_kind = kind;
-                        last_match = match;
-                        break;
-                    }
-                }
-            }
-
-            return found_kind;
-        }
-
-        /// <summary>
-        /// Returns the pattern string for a kind of pattern.
-        /// </summary>
-        private string GetPattern(IniPatternKind kind)
-        {
-            string pattern = null;
-
-            switch(kind)
-            {
-                case IniPatternKind.Comment:
-                    pattern = comment;
-                    break;
-                case IniPatternKind.Section:
-                    pattern = section;
-                    break;
-                case IniPatternKind.Setting:
-                    pattern = setting;
-                    break;
-            }
-
-            return pattern;
-        }
+        #region Regular Expressions
+        /* Comments start with any number of spaces, then a semicolon, possibly
+         * followed by a space, then any number of characters, which are the
+         * comment, then the string ends.
+         */
+        private static string comment =
+            @"^\s*;+\s?(?<comment>.*)$";
+        /* Sections start with any number of spaces, then a [, then any number
+         * of spaces, then one or more characters, which are the name, then any
+         * number of spaces, then a ], then any number of spaces, then possibly
+         * any number of semicolons, then possibly any number of characters,
+         * which are the comment, then the string ends.
+         */
+        private static string section =
+            @"^\s*\[\s*(?<name>[\w\s\.]*\w)\s*\]\s*;*\s?(?<comment>.*)$";
+        private static string setting =
+            /* Settings start with any number of spaces, then one or more word
+             * characters, which are the name, then any number of spaces, an
+             * equal sign, then any number of spaces...
+             */
+            @"^\s*(?<name>\w+)\s*=\s*" +
+            /* ...then any number of non-semicolon characters, which are the
+             * value, then by any number of spaces...
+             */
+            @"(?<value>[^\;]*)\s*" +
+            /* ...then by any number of semicolons, possibly a space, then any
+             * number of characters, which are the comment, then the string
+             * ends.
+             */
+            @";*\s?(?<comment>.*)$";
+        #endregion
     }
 }

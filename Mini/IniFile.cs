@@ -65,11 +65,15 @@ namespace Mini
                 switch(kind)
                 {
                     case IniPatternKind.Comment:
-                        comment = JoinComments(string.Empty, comment, matcher.LastComment);
+                        comment = JoinComments(string.Empty,
+                                               comment,
+                                               matcher.LastComment);
                         break;
                     case IniPatternKind.Section:
                         section = this[matcher.LastName];
-                        section.Comment = JoinComments(section.Comment, comment, matcher.LastComment);
+                        section.Comment = JoinComments(section.Comment,
+                                                       comment,
+                                                       matcher.LastComment);
                         comment = string.Empty;
                         break;
                     case IniPatternKind.Setting:
@@ -84,9 +88,12 @@ namespace Mini
                         }
                         break;
                     case IniPatternKind.None:
+                        // If there's a stored comment, add it then clear it.
                         if(!string.IsNullOrEmpty(comment))
+                        {
                             parts.Add(new IniComment(comment, true));
-                        comment = string.Empty;
+                            comment = string.Empty;
+                        }
                         break;
                 }
             }
@@ -150,7 +157,8 @@ namespace Mini
         /// <param name="built">The current built-up comment.</param>
         /// <param name="last">The last read comment.</param>
         /// <returns>A new, joined comment.</returns>
-        private static string JoinComments(string current, string built, string last)
+        private static string JoinComments(string current, string built,
+                                           string last)
         {
             string ret = string.Empty;
 
