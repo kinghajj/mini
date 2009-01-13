@@ -24,6 +24,7 @@
  */
 
 using System;
+using System.IO;
 
 namespace Mini
 {
@@ -47,12 +48,14 @@ namespace Mini
         /// Writes the comment to an output stream.
         /// </summary>
         /// <param name="writer">The stream to write to.</param>
-        override internal void Write(System.IO.StreamWriter writer)
+        override internal void Write(StreamWriter writer)
         {
+            var newline = Environment.NewLine.ToCharArray();
+
             if(!String.IsNullOrEmpty(Comment))
-                foreach(var comment in
-                        Comment.Split(Environment.NewLine.ToCharArray()))
-                    writer.WriteLine("; {0}", comment);
+                foreach(var comment in Comment.Split(newline, StringSplitOptions.RemoveEmptyEntries))
+                        writer.WriteLine("; {0}", comment);
+
             if(Alone)
                 writer.WriteLine();
         }
@@ -63,7 +66,7 @@ namespace Mini
         /// Returns true if the comment is by itself and does not belong to
         /// another part.
         /// </summary>
-        internal bool Alone
+        public bool Alone
         {
             get;
             private set;
@@ -72,7 +75,7 @@ namespace Mini
         /// <summary>
         /// Get or set the comment as a string.
         /// </summary>
-        internal string Comment
+        public string Comment
         {
             get;
             set;

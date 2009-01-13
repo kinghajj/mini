@@ -91,7 +91,11 @@ namespace Mini
                         // If there's a stored comment, add it then clear it.
                         if(!string.IsNullOrEmpty(comment))
                         {
-                            parts.Add(new IniComment(comment, true));
+                            var new_comment = new IniComment(comment, true);
+                            if(section != null)
+                                section.parts.Add(new_comment);
+                            else
+                                parts.Add(new_comment);
                             comment = string.Empty;
                         }
                         break;
@@ -113,6 +117,7 @@ namespace Mini
             : this(new StreamReader(path, encoding))
         {
             Path = path;
+            Encoding = encoding;
         }
 
         /// <summary>
@@ -144,7 +149,7 @@ namespace Mini
         /// </param>
         public void SaveAs(string path)
         {
-            var writer = new StreamWriter(path);
+            var writer = new StreamWriter(path, false, Encoding);
             foreach(var part in parts)
                 part.Write(writer);
             writer.Close();
@@ -153,26 +158,19 @@ namespace Mini
         /// <summary>
         /// Joins together multiple comments.
         /// </summary>
-        /// <param name="current">The current comment.</param>
+        /// <param name="current">A section's or setting's current comment.</param>
         /// <param name="built">The current built-up comment.</param>
-        /// <param name="last">The last read comment.</param>
+        /// <param name="last">The last parsed comment.</param>
         /// <returns>A new, joined comment.</returns>
         private static string JoinComments(string current, string built,
                                            string last)
         {
-            string ret = string.Empty;
-
-            if(string.IsNullOrEmpty(current))
-            {
-                if(string.IsNullOrEmpty(built))
-                    ret = last;
-                else
-                    ret = built + "\n" + last;
-            }
-            else
-                ret = current + "\n" + built + last;
-
-            return ret;
+            return
+                string.IsNullOrEmpty(current)
+                    ? (string.IsNullOrEmpty(built)
+                          ? last
+                          : string.Concat(built, Environment.NewLine, last))
+                    : string.Concat(current, Environment.NewLine, built, last);
         }
         #endregion
 
@@ -188,8 +186,6 @@ namespace Mini
             foreach(var part in parts)
                 if(part is IniSection)
                     yield return (IniSection)part;
-            //foreach(IniSection section in sections)
-            //    yield return section;
         }
         
         /// <summary>
@@ -241,6 +237,10 @@ namespace Mini
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Gets or sets the INI's encoding.
+        /// </summary>
+        public Encoding Encoding { get; set; }
         /// <value>
         /// Get an INI file's path.
         /// </value>

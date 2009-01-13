@@ -55,7 +55,7 @@ namespace Mini
         /// </summary>
         public void Remove()
         {
-            section.settings.Remove(this);
+            section.parts.Remove(this);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Mini
         override internal void Write(StreamWriter writer)
         {
             new IniComment(Comment).Write(writer);
-            writer.WriteLine("{0} = {1}", Key, Value);
+            writer.WriteLine("{0}={1}", Key, Value);
         }
         #endregion
 

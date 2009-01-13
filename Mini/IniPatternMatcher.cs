@@ -125,7 +125,7 @@ namespace Mini
         /// <summary>
         /// Returns the pattern string for a kind of pattern.
         /// </summary>
-        private string GetPattern(IniPatternKind kind)
+        private static string GetPattern(IniPatternKind kind)
         {
             string pattern = string.Empty;
 

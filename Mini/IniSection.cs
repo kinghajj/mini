@@ -28,7 +28,7 @@ namespace Mini
     public class IniSection : IniPart, IEnumerable<IniSetting>
     {
         internal IniFile ini;
-        internal List<IniSetting> settings;
+        internal List<IniPart> parts;
 
         #region Constructors
         /// <summary>
@@ -46,7 +46,7 @@ namespace Mini
         internal IniSection(string name, string comment, IniFile ini)
         {
             this.ini = ini;
-            settings = new List<IniSetting>();
+            parts = new List<IniPart>();
             Comment = comment;
             Name = name;
         }
@@ -69,8 +69,8 @@ namespace Mini
         {
             new IniComment(Comment).Write(writer);
             writer.WriteLine("[{0}]", Name);
-            foreach(var setting in this)
-                setting.Write(writer);
+            foreach(var part in parts)
+                part.Write(writer);
             writer.WriteLine();
         }
         #endregion
@@ -84,8 +84,9 @@ namespace Mini
         /// </returns>
         public IEnumerator<IniSetting> GetEnumerator()
         {
-            foreach(IniSetting setting in settings)
-                yield return setting;
+            foreach(var part in parts)
+                if(part is IniSetting)
+                    yield return (IniSetting)part;
         }
         
         IEnumerator IEnumerable.GetEnumerator()
@@ -113,7 +114,7 @@ namespace Mini
                 if(found == null)
                 {
                     found = new IniSetting(key, string.Empty, this);
-                    settings.Add(found);
+                    parts.Add(found);
                 }
 
                 return found;
@@ -123,11 +124,11 @@ namespace Mini
         /// <summary>
         /// Gets a section's setting via its index.
         /// </summary>
-        public IniSetting this[int index]
+        public IniPart this[int index]
         {
             get
             {
-                return settings[index];
+                return parts[index];
             }
         }
         #endregion
