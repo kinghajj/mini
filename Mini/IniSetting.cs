@@ -64,7 +64,7 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         override internal void Write(StreamWriter writer)
         {
-            new IniComment(Comment).Write(writer);
+            new IniComment(Comment).Write(writer, false);
             writer.WriteLine("{0}={1}", Key, Value);
         }
         #endregion

@@ -40,7 +40,9 @@ namespace Mini
         /// </summary>
         public IniFile()
         {
-            parts = new List<IniPart>();
+            parts    = new List<IniPart>();
+            Path     = string.Empty;
+            Encoding = Encoding.Default;
         }
 
         /// <summary>
@@ -53,37 +55,34 @@ namespace Mini
         public IniFile(StreamReader stream)
             : this()
         {
-            var matcher = new IniPatternMatcher(stream);
             string comment = string.Empty;
             IniSection section = null;
             IniSetting setting = null;
 
-            while(!matcher.EndOfStream)
+            foreach(var pattern in new IniPatterns(stream))
             {
-                var kind = matcher.GetNextPattern();
-
-                switch(kind)
+                switch(pattern.Kind)
                 {
                     case IniPatternKind.Comment:
                         comment = JoinComments(string.Empty,
                                                comment,
-                                               matcher.LastComment);
+                                               pattern.Comment);
                         break;
                     case IniPatternKind.Section:
-                        section = this[matcher.LastName];
+                        section = this[pattern.Name];
                         section.Comment = JoinComments(section.Comment,
                                                        comment,
-                                                       matcher.LastComment);
+                                                       pattern.Comment);
                         comment = string.Empty;
                         break;
                     case IniPatternKind.Setting:
                         if(section != null)
                         {
-                            setting = section[matcher.LastName];
+                            setting = section[pattern.Name];
                             setting.Comment = JoinComments(setting.Comment,
                                                            comment,
-                                                           matcher.LastComment);
-                            setting.Value = matcher.LastValue;
+                                                           pattern.Comment);
+                            setting.Value = pattern.Value;
                             comment = string.Empty;
                         }
                         break;
@@ -91,7 +90,7 @@ namespace Mini
                         // If there's a stored comment, add it then clear it.
                         if(!string.IsNullOrEmpty(comment))
                         {
-                            var new_comment = new IniComment(comment, true);
+                            var new_comment = new IniComment(comment);
                             if(section != null)
                                 section.AddPart(new_comment);
                             else
@@ -116,7 +115,7 @@ namespace Mini
         public IniFile(string path, Encoding encoding)
             : this(new StreamReader(path, encoding))
         {
-            Path = path;
+            Path     = path;
             Encoding = encoding;
         }
 
@@ -209,7 +208,7 @@ namespace Mini
         /// <summary>
         /// Silly required function.
         /// </summary>
-        /// <returns>An enumerator of IniSections</returns>
+        /// <returns>An enumerator of IniParts.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

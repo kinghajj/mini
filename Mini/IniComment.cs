@@ -32,14 +32,8 @@ namespace Mini
     {
         #region Constructors
         internal IniComment(string comment)
-            : this(comment, false)
-        {
-        }
-
-        internal IniComment(string comment, bool alone)
         {
             Comment = comment;
-            Alone = alone;
         }
         #endregion
 
@@ -50,28 +44,28 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         override internal void Write(StreamWriter writer)
         {
+            Write(writer, true);
+        }
+
+        /// <summary>
+        /// Writes the comment to an output stream.
+        /// </summary>
+        /// <param name="writer">The stream to write to.</param>
+        /// <param name="endWithNewline">Whether to write a newline after the comment.</param>
+        internal void Write(StreamWriter writer, bool endWithNewline)
+        {
             var newline = Environment.NewLine.ToCharArray();
 
             if(!String.IsNullOrEmpty(Comment))
                 foreach(var comment in Comment.Split(newline, StringSplitOptions.RemoveEmptyEntries))
-                        writer.WriteLine("; {0}", comment);
+                    writer.WriteLine("; {0}", comment);
 
-            if(Alone)
+            if(endWithNewline)
                 writer.WriteLine();
         }
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Returns true if the comment is by itself and does not belong to
-        /// another part.
-        /// </summary>
-        public bool Alone
-        {
-            get;
-            private set;
-        }
-
         /// <summary>
         /// Get or set the comment as a string.
         /// </summary>

@@ -16,13 +16,15 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* IniPatternMather.cs - "Tokenizer" for INI files.
+/* IniPatterns.cs - "Tokenizer" for INI files.
  * 
  * This class uses regular expressions to break up lines of an INI file into
  * their important parts, in effect tokenizing them for the parser.
  */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -31,7 +33,7 @@ namespace Mini
     /// <summary>
     /// The possible patterns in an INI.
     /// </summary>
-    public enum IniPatternKind
+    internal enum IniPatternKind
     {
         Comment,
         Section,
@@ -40,16 +42,49 @@ namespace Mini
     }
 
     /// <summary>
+    /// Contains information on a parsed INI pattern.
+    /// </summary>
+    internal class IniPattern
+    {
+        internal IniPattern()
+        {
+        }
+
+        internal string Comment
+        {
+            get;
+            set;
+        }
+
+        internal IniPatternKind Kind
+        {
+            get;
+            set;
+        }
+
+        internal string Name
+        {
+            get;
+            set;
+        }
+
+        internal string Value
+        {
+            get;
+            set;
+        }
+    }
+
+    /// <summary>
     /// Finds and matches patterns of INI files.
     /// </summary>
-    public class IniPatternMatcher
+    internal class IniPatterns : IEnumerable<IniPattern>
     {
         private Match last_match;
         private StreamReader stream;
-        private string last_comment, last_name, last_value;
 
         #region Constructors
-        public IniPatternMatcher(StreamReader input)
+        public IniPatterns(StreamReader input)
         {
             stream = input;
         }
@@ -60,36 +95,36 @@ namespace Mini
         /// Gets the kind of the next pattern in the stream, and stores the
         /// matched data.
         /// </summary>
-        public IniPatternKind GetNextPattern()
+        private IniPattern GetNextPattern()
         {
-            IniPatternKind kind = IniPatternKind.None;
-
-            // Reset the comment, name, and value to empty.
-            last_comment = last_name = last_value = string.Empty;
+            string comment = string.Empty,
+                   name    = string.Empty,
+                   value   = string.Empty;
+            IniPatternKind kind;
 
             // Read a line from the stream and try to match it with a pattern.
-            if(!stream.EndOfStream)
-            {
-                string line = stream.ReadLine();
-                kind = Find(line);
-            }
-
             // If the match was successful,
-            if(kind != IniPatternKind.None)
+            if( (kind = Find(stream.ReadLine())) != IniPatternKind.None)
             {
                 Group group;
                 // If the match produced a comment, save it.
                 if((group = last_match.Groups["comment"]) != null)
-                    last_comment = group.Value;
+                    comment = group.Value;
                 // If the match produced a name, save it.
                 if((group = last_match.Groups["name"]) != null)
-                    last_name = group.Value;
+                    name = group.Value;
                 // If the match produced a value, save it.
                 if((group = last_match.Groups["value"]) != null)
-                    last_value = group.Value;
+                    value = group.Value;
             }
 
-            return kind;
+            return new IniPattern()
+            {
+                Comment = comment,
+                Kind    = kind,
+                Name    = name,
+                Value   = value,
+            };
         }
 
         /// <summary>
@@ -146,49 +181,26 @@ namespace Mini
         }
         #endregion
 
-        #region Properties
+        #region Enumerator
         /// <summary>
-        /// Returns true if the stream is finished.
+        /// Gets an iterator for the file's sections.
         /// </summary>
-        public bool EndOfStream
+        /// <returns>
+        /// A <see cref="IEnumerator`1"/>
+        /// </returns>
+        public IEnumerator<IniPattern> GetEnumerator()
         {
-            get
-            {
-                return stream.EndOfStream;
-            }
+            while(!stream.EndOfStream)
+                yield return GetNextPattern();
         }
 
         /// <summary>
-        /// The last parsed comment.
+        /// Silly required function.
         /// </summary>
-        public string LastComment
+        /// <returns>An enumerator of IniPatterns.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            get
-            {
-                return last_comment;
-            }
-        }
-
-        /// <summary>
-        /// The most recently parsed name.
-        /// </summary>
-        public string LastName
-        {
-            get
-            {
-                return last_name;
-            }
-        }
-
-        /// <summary>
-        /// The most recently parsed value.
-        /// </summary>
-        public string LastValue
-        {
-            get
-            {
-                return last_value;
-            }
+            return GetEnumerator();
         }
         #endregion
 

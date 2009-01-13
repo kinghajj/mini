@@ -33,7 +33,7 @@
   <ItemGroup>
     <Compile Include="IniComment.cs" />
     <Compile Include="IniPart.cs" />
-    <Compile Include="IniPatternMatcher.cs" />
+    <Compile Include="IniPatterns.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="IniSection.cs" />
     <Compile Include="IniSetting.cs" />
