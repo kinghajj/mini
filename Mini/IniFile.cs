@@ -32,7 +32,7 @@ namespace Mini
 {
     public class IniFile : IEnumerable<IniSection>
     {
-        internal List<IniPart> parts;
+        private List<IniPart> parts;
 
         #region Constructors
         /// <summary>
@@ -93,7 +93,7 @@ namespace Mini
                         {
                             var new_comment = new IniComment(comment, true);
                             if(section != null)
-                                section.parts.Add(new_comment);
+                                section.AddPart(new_comment);
                             else
                                 parts.Add(new_comment);
                             comment = string.Empty;
@@ -153,6 +153,24 @@ namespace Mini
             foreach(var part in parts)
                 part.Write(writer);
             writer.Close();
+        }
+
+        /// <summary>
+        /// Adds a part to a file's list of INI parts.
+        /// </summary>
+        /// <param name="part">The part to add.</param>
+        internal void AddPart(IniPart part)
+        {
+            parts.Add(part);
+        }
+
+        /// <summary>
+        /// Removes a part from a files's list of INI parts.
+        /// </summary>
+        /// <param name="part">The part to remove.</param>
+        internal void RemovePart(IniPart part)
+        {
+            parts.Remove(part);
         }
 
         /// <summary>

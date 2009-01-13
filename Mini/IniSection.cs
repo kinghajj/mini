@@ -27,8 +27,8 @@ namespace Mini
 {
     public class IniSection : IniPart, IEnumerable<IniSetting>
     {
-        internal IniFile ini;
-        internal List<IniPart> parts;
+        private IniFile ini;
+        private List<IniPart> parts;
 
         #region Constructors
         /// <summary>
@@ -58,7 +58,25 @@ namespace Mini
         /// </summary>
         public void Remove()
         {
-            ini.parts.Remove(this);
+            ini.RemovePart(this);
+        }
+
+        /// <summary>
+        /// Adds a part to a section's list of INI parts.
+        /// </summary>
+        /// <param name="part">The part to add.</param>
+        internal void AddPart(IniPart part)
+        {
+            parts.Add(part);
+        }
+
+        /// <summary>
+        /// Removes a part from a section's list of INI parts.
+        /// </summary>
+        /// <param name="part">The part to remove.</param>
+        internal void RemovePart(IniPart part)
+        {
+            parts.Remove(part);
         }
 
         /// <summary>

@@ -55,7 +55,7 @@ namespace Mini
         /// </summary>
         public void Remove()
         {
-            section.parts.Remove(this);
+            section.RemovePart(this);
         }
 
         /// <summary>
