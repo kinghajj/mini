@@ -46,33 +46,13 @@ namespace Mini
     /// </summary>
     internal class IniPattern
     {
-        internal IniPattern()
-        {
-        }
+        internal string Comment { get; set; }
 
-        internal string Comment
-        {
-            get;
-            set;
-        }
+        internal IniPatternKind Kind { get; set; }
 
-        internal IniPatternKind Kind
-        {
-            get;
-            set;
-        }
+        internal string Name { get; set; }
 
-        internal string Name
-        {
-            get;
-            set;
-        }
-
-        internal string Value
-        {
-            get;
-            set;
-        }
+        internal string Value { get; set; }
     }
 
     /// <summary>
@@ -104,7 +84,7 @@ namespace Mini
 
             // Read a line from the stream and try to match it with a pattern.
             // If the match was successful,
-            if( (kind = Find(stream.ReadLine())) != IniPatternKind.None)
+            if( (kind = MatchWithPattern(stream.ReadLine())) != IniPatternKind.None)
             {
                 Group group;
                 // If the match produced a comment, save it.
@@ -130,7 +110,7 @@ namespace Mini
         /// <summary>
         /// Returns the kind of pattern that matches the input.
         /// </summary>
-        private IniPatternKind Find(string input)
+        private IniPatternKind MatchWithPattern(string input)
         {
             var found_kind = IniPatternKind.None;
 

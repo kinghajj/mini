@@ -27,7 +27,6 @@ namespace Mini
 {
     public class IniSection : IniPart, IEnumerable<IniSetting>
     {
-        private IniFile ini;
         private List<IniPart> parts;
 
         #region Constructors
@@ -43,9 +42,8 @@ namespace Mini
         /// <param name="ini">
         /// The file to which the section belongs.
         /// </param>
-        internal IniSection(string name, string comment, IniFile ini)
+        internal IniSection(string name, string comment)
         {
-            this.ini = ini;
             parts = new List<IniPart>();
             Comment = comment;
             Name = name;
@@ -54,11 +52,21 @@ namespace Mini
 
         #region Methods
         /// <summary>
-        /// Removes a section from its file.
+        /// Removes a setting from the section.
         /// </summary>
-        public void Remove()
+        /// <param name="section">The setting to remove.</param>
+        public void Remove(IniSetting setting)
         {
-            ini.RemovePart(this);
+            parts.Remove(setting);
+        }
+
+        // <summary>
+        /// Removes a setting by its key.
+        /// </summary>
+        /// <param name="sectionName">The key of the setting to remove.</param>
+        public void Remove(string settingKey)
+        {
+            Remove(FindSetting(settingKey));
         }
 
         /// <summary>
@@ -91,6 +99,19 @@ namespace Mini
                 part.Write(writer);
             writer.WriteLine();
         }
+
+        /// <summary>
+        /// Finds a setting by key.
+        /// </summary>
+        /// <param name="name">The key of the setting to find.</param>
+        /// <returns>The found setting or null.</returns>
+        private IniSetting FindSetting(string key)
+        {
+            return parts.Find(
+                part => part is IniSetting ?
+                            (part as IniSetting).Key.Equals(key) :
+                            false) as IniSetting;
+        }
         #endregion
 
         #region Enumerator
@@ -121,17 +142,12 @@ namespace Mini
         {
             get
             {
-                IniSetting found = null;
-
-                // try to find the section.
-                foreach(IniSetting setting in this)
-                    if(setting.Key.Equals(key))
-                        found = setting;
+                IniSetting found = FindSetting(key);
 
                 // if not, create it and add it.
                 if(found == null)
                 {
-                    found = new IniSetting(key, string.Empty, this);
+                    found = new IniSetting(key, string.Empty);
                     parts.Add(found);
                 }
 
@@ -165,11 +181,6 @@ namespace Mini
         /// Get or set a section's name.
         /// </value>
         public string Name { get; set; }
-
-        /// <value>
-        /// Get a section's file.
-        /// </value>
-        public IniFile Ini { get { return ini; } }
         #endregion
     }
 }

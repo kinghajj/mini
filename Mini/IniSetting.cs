@@ -25,8 +25,6 @@ namespace Mini
 {
     public class IniSetting : IniPart
     {
-        private IniSection section;
-
         #region Constructors
         /// <summary>
         /// Creates a new setting with a key, value, and section.
@@ -40,24 +38,15 @@ namespace Mini
         /// <param name="section">
         /// The section to which the setting belongs.
         /// </param>
-        internal IniSetting(string key, string _value, IniSection section)
+        internal IniSetting(string key, string value)
         {
             Comment = string.Empty;
             Key = key;
-            Value = _value;
-            this.section = section;
+            Value = value;
         }
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Removes a setting from its section.
-        /// </summary>
-        public void Remove()
-        {
-            section.RemovePart(this);
-        }
-
         /// <summary>
         /// Writes the setting to an output stream.
         /// </summary>
@@ -83,11 +72,6 @@ namespace Mini
         /// Gets or sets a setting's key.
         /// </value>
         public string Key { get; set; }
-
-        /// <value>
-        /// Gets a setting's section.
-        /// </value>
-        public IniSection Section { get { return section; } }
 
         /// <value>
         /// Gets or sets a settings's value.

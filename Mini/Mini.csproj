@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IniComment.cs" />
     <Compile Include="IniPart.cs" />
     <Compile Include="IniPatterns.cs" />

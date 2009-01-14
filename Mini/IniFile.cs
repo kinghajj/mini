@@ -132,6 +132,25 @@ namespace Mini
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Removes a section from the INI file.
+        /// </summary>
+        /// <param name="section">The section to remove.</param>
+        public void Remove(IniSection section)
+        {
+            parts.Remove(section);
+        }
+
+        /// <summary>
+        /// Removes a section by its name.
+        /// </summary>
+        /// <param name="sectionName">The name of the section to remove.</param>
+        public void Remove(string sectionName)
+        {
+            Remove(FindSection(sectionName));
+        }
+
         /// <summary>
         /// Saves the file using its path.
         /// </summary>
@@ -148,19 +167,9 @@ namespace Mini
         /// </param>
         public void SaveAs(string path)
         {
-            var writer = new StreamWriter(path, false, Encoding);
-            foreach(var part in parts)
-                part.Write(writer);
-            writer.Close();
-        }
-
-        /// <summary>
-        /// Adds a part to a file's list of INI parts.
-        /// </summary>
-        /// <param name="part">The part to add.</param>
-        internal void AddPart(IniPart part)
-        {
-            parts.Add(part);
+            using(var writer = new StreamWriter(path, false, Encoding))
+                foreach(var part in parts)
+                    part.Write(writer);
         }
 
         /// <summary>
@@ -170,6 +179,19 @@ namespace Mini
         internal void RemovePart(IniPart part)
         {
             parts.Remove(part);
+        }
+
+        /// <summary>
+        /// Finds a section by name.
+        /// </summary>
+        /// <param name="name">The name of the section to find.</param>
+        /// <returns>The found section or null.</returns>
+        private IniSection FindSection(string name)
+        {
+            return parts.Find(
+                part => (part is IniSection) ?
+                            (part as IniSection).Name.Equals(name) :
+                            false) as IniSection;
         }
 
         /// <summary>
@@ -223,17 +245,12 @@ namespace Mini
         {
             get
             {
-                IniSection found = null;
-
-                // try to find the section.
-                foreach(IniSection section in this)
-                    if(section.Name.Equals(name))
-                        found = section;
+                IniSection found = FindSection(name);
 
                 // if not, create it and add it.
                 if(found == null)
                 {
-                    found = new IniSection(name, string.Empty, this);
+                    found = new IniSection(name, string.Empty);
                     parts.Add(found);
                 }
 
