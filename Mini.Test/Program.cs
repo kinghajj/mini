@@ -29,8 +29,17 @@ namespace Mini.Test
         {
             var startMem = GC.GetTotalMemory(true);
             var start = DateTime.Now;
+
             var ini = new IniFile("test.ini");
+            ini["User"]["Name"].Value = "md5sum";
+            ini["User"]["PasswordHash"].Value = "e65b0dce58cbecf21e7c9ff7318f3b57";
+            ini["User"]["RemoveThis"].Value = "This shouldn'd stay.";
+            ini["User"].Remove("RemoveThis");
+            ini["RemoveThisToo"].Comment = "This better not stay!";
+            ini.Remove("RemoveThisToo");
+            ini["User"].Comment = "These are the basic user settings.\nDon't modify them unless you know what you're doing.";
             ini.SaveAs("test2.ini");
+
             var end = DateTime.Now;
             var endMem = GC.GetTotalMemory(true);
             var elapsed = end.Ticks - start.Ticks;

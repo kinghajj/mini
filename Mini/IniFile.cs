@@ -49,57 +49,13 @@ namespace Mini
         /// Opens an INI file from a stream.
         /// </summary>
         /// <param name="stream">
-        /// A <see cref="StreamReader"/> from which to read the INI file.
+        /// The stream from which to read the INI file.
         /// This stream will be closed.
         /// </param>
         public IniFile(StreamReader stream)
             : this()
         {
-            string comment = string.Empty;
-            IniSection section = null;
-            IniSetting setting = null;
-
-            foreach(var pattern in new IniPatterns(stream))
-            {
-                switch(pattern.Kind)
-                {
-                    case IniPatternKind.Comment:
-                        comment = JoinComments(string.Empty,
-                                               comment,
-                                               pattern.Comment);
-                        break;
-                    case IniPatternKind.Section:
-                        section = this[pattern.Name];
-                        section.Comment = JoinComments(section.Comment,
-                                                       comment,
-                                                       pattern.Comment);
-                        comment = string.Empty;
-                        break;
-                    case IniPatternKind.Setting:
-                        if(section != null)
-                        {
-                            setting = section[pattern.Name];
-                            setting.Comment = JoinComments(setting.Comment,
-                                                           comment,
-                                                           pattern.Comment);
-                            setting.Value = pattern.Value;
-                            comment = string.Empty;
-                        }
-                        break;
-                    case IniPatternKind.None:
-                        // If there's a stored comment, add it then clear it.
-                        if(!string.IsNullOrEmpty(comment))
-                        {
-                            var new_comment = new IniComment(comment);
-                            if(section != null)
-                                section.AddPart(new_comment);
-                            else
-                                parts.Add(new_comment);
-                            comment = string.Empty;
-                        }
-                        break;
-                }
-            }
+            Parse(stream);
             stream.Close();
         }
 
@@ -107,10 +63,10 @@ namespace Mini
         /// Opens an INI file from a path with the given encoding.
         /// </summary>
         /// <param name="path">
-        /// A <see cref="System.String"/> path to the INI file.
+        /// The path to the INI file.
         /// </param>
         /// <param name="encoding">
-        /// An <see cref="Encoding"/> with which to interpret the INI file.
+        /// An encoding with which to interpret the INI file.
         /// </param>
         public IniFile(string path, Encoding encoding)
             : this(new StreamReader(path, encoding))
@@ -123,7 +79,7 @@ namespace Mini
         /// Opens an INI file from a path.
         /// </summary>
         /// <param name="path">
-        /// A <see cref="System.String"/> path to the INI file.
+        /// The path to the INI file.
         /// </param>
         public IniFile(string path)
             : this(path, Encoding.Default)
@@ -173,25 +129,78 @@ namespace Mini
         }
 
         /// <summary>
-        /// Removes a part from a files's list of INI parts.
-        /// </summary>
-        /// <param name="part">The part to remove.</param>
-        internal void RemovePart(IniPart part)
-        {
-            parts.Remove(part);
-        }
-
-        /// <summary>
         /// Finds a section by name.
         /// </summary>
         /// <param name="name">The name of the section to find.</param>
         /// <returns>The found section or null.</returns>
         private IniSection FindSection(string name)
         {
-            return parts.Find(
-                part => (part is IniSection) ?
-                            (part as IniSection).Name.Equals(name) :
-                            false) as IniSection;
+            foreach(var part in parts)
+            {
+                var section = part as IniSection;
+                if(section != null && section.Name.Equals(name))
+                    return section;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Parses an input stream into as an INI file.
+        /// </summary>
+        /// <param name="stream">The stream to parse.</param>
+        private void Parse(StreamReader stream)
+        {
+            string comment = string.Empty;
+            IniSection section = null;
+            IniSetting setting = null;
+
+            foreach(var pattern in new IniPatterns(stream))
+            {
+                switch(pattern.Kind)
+                {
+                    case IniPatternKind.Comment:
+                        comment = JoinComments(string.Empty,
+                                               comment,
+                                               pattern.Comment);
+                        break;
+                    case IniPatternKind.Section:
+                        // Get this section by its name.
+                        section = this[pattern.Name];
+                        // Set its comment and value.
+                        section.Comment = JoinComments(section.Comment,
+                                                       comment,
+                                                       pattern.Comment);
+                        comment = string.Empty;
+                        break;
+                    case IniPatternKind.Setting:
+                        // If we're within a section,
+                        if(section != null)
+                        {
+                            // Get this setting by its key.
+                            setting = section[pattern.Name];
+                            // Set its comment and value.
+                            setting.Comment = JoinComments(setting.Comment,
+                                                           comment,
+                                                           pattern.Comment);
+                            setting.Value = pattern.Value;
+                            // Erase the old built-up comment.
+                            comment = string.Empty;
+                        }
+                        break;
+                    case IniPatternKind.None:
+                        // If there's a stored comment, add it then clear it.
+                        if(!string.IsNullOrEmpty(comment))
+                        {
+                            var new_comment = new IniComment(comment);
+                            if(section != null)
+                                section.AddPart(new_comment);
+                            else
+                                parts.Add(new_comment);
+                            comment = string.Empty;
+                        }
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -218,7 +227,7 @@ namespace Mini
         /// Gets an iterator for the file's sections.
         /// </summary>
         /// <returns>
-        /// A <see cref="IEnumerator`1"/>
+        /// An enumerator of sections of the INI file.
         /// </returns>
         public IEnumerator<IniSection> GetEnumerator()
         {

@@ -19,3 +19,7 @@
 
 // Having a strong key is sort of pointless for an open-source project.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA2210:AssembliesShouldHaveValidStrongNames")]
+
+// Who cares if we don't have many types, that's actually a Good Thing, since it
+// makes the library smaller and simpler.
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Mini")]

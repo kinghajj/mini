@@ -166,7 +166,7 @@ namespace Mini
         /// Gets an iterator for the file's sections.
         /// </summary>
         /// <returns>
-        /// A <see cref="IEnumerator`1"/>
+        /// An enumerator of patterns processed from the input stream.
         /// </returns>
         public IEnumerator<IniPattern> GetEnumerator()
         {

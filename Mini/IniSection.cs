@@ -79,15 +79,6 @@ namespace Mini
         }
 
         /// <summary>
-        /// Removes a part from a section's list of INI parts.
-        /// </summary>
-        /// <param name="part">The part to remove.</param>
-        internal void RemovePart(IniPart part)
-        {
-            parts.Remove(part);
-        }
-
-        /// <summary>
         /// Writes the section to an output stream.
         /// </summary>
         /// <param name="writer">The stream to write to.</param>
@@ -107,10 +98,13 @@ namespace Mini
         /// <returns>The found setting or null.</returns>
         private IniSetting FindSetting(string key)
         {
-            return parts.Find(
-                part => part is IniSetting ?
-                            (part as IniSetting).Key.Equals(key) :
-                            false) as IniSetting;
+            foreach(var part in parts)
+            {
+                var setting = part as IniSetting;
+                if(setting != null && setting.Key.Equals(key))
+                    return setting;
+            }
+            return null;
         }
         #endregion
 
@@ -119,7 +113,7 @@ namespace Mini
         /// Gets an iterator for the section's settings.
         /// </summary>
         /// <returns>
-        /// A <see cref="IEnumerator`1"/>
+        /// An enumerator of settings of the section.
         /// </returns>
         public IEnumerator<IniSetting> GetEnumerator()
         {
