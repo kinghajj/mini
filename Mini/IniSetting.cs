@@ -48,6 +48,35 @@ namespace Mini
 
         #region Methods
         /// <summary>
+        ///  Determines whether an IniSetting instance is equal in value to
+        ///  an Object instance. 
+        /// </summary>
+        /// <param name="obj">
+        /// The Object to compare with the IniSetting.
+        /// </param>
+        /// <returns>True if the objects are equal.</returns>
+        public override bool Equals(object obj)
+        {
+            var setting = obj as IniSetting;
+
+            return setting == null ? false :
+                setting.Key == Key && setting.Value == Value ? true : false;
+        }
+
+        /// <summary>
+        ///  Serves as a hash function for an IniSetting. 
+        /// </summary>
+        /// <remarks>
+        /// This is probably a bad implementation. Maybe a call to
+        /// base.GetHashCode() would suffice.
+        /// </remarks>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return Key.GetHashCode() + Value.GetHashCode();
+        }
+
+        /// <summary>
         /// Writes the setting to an output stream.
         /// </summary>
         /// <param name="writer">The stream to write to.</param>
