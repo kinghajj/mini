@@ -25,7 +25,7 @@ using System.IO;
 
 namespace Mini
 {
-    public class IniSection : IniPart, IDictionary<string, string>
+    public class IniSection : IniPart, IEnumerable<IniSetting>
     {
         private List<IniPart> parts;
 
@@ -52,124 +52,21 @@ namespace Mini
 
         #region Methods
         /// <summary>
-        /// Adds a setting in the form of a KeyValuePair.
+        /// Removes a setting from the section.
         /// </summary>
-        /// <param name="pair">The pair to add.</param>
-        public void Add(KeyValuePair<string, string> pair)
+        /// <param name="section">The setting to remove.</param>
+        public void Remove(IniSetting setting)
         {
-            this[pair.Key] = pair.Value;
+            parts.Remove(setting);
         }
 
-        /// <summary>
-        /// Adds or updates a setting in the form of two strings.
-        /// </summary>
-        /// <param name="key">The key of the setting to add.</param>
-        /// <param name="value">The value of the setting to add.</param>
-        public void Add(string key, string value)
-        {
-            this[key] = value;
-        }
-
-        /// <summary>
-        /// Clears all held settings.
-        /// </summary>
-        public void Clear()
-        {
-            parts.Clear();
-        }
-
-        /// <summary>
-        /// Determines whether a held setting matches the KeyValuePair.
-        /// </summary>
-        /// <param name="pair">The pair to compare against.</param>
-        /// <returns>
-        /// True if there is a setting that matches the given pair.
-        /// </returns>
-        public bool Contains(KeyValuePair<string, string> pair)
-        {
-            var match = new IniSetting(pair.Key, pair.Value);
-
-            foreach(var setting in GetSettings())
-                if(setting.Equals(match))
-                    return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Determines whether a held setting has the given key.
-        /// </summary>
-        /// <param name="key">The key to find.</param>
-        /// <returns>True if such a setting is held.</returns>
-        public bool ContainsKey(string key)
-        {
-            foreach(var setting in GetSettings())
-                if(setting.Key == key)
-                    return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Copies the held settings to an array of KeyValuePair at an index.
-        /// </summary>
-        /// <param name="array">The array to copy to.</param>
-        /// <param name="i">The index at which to start copying.</param>
-        public void CopyTo(KeyValuePair<string, string>[] array, int i)
-        {
-            foreach(var setting in GetSettings())
-            {
-                if(i >= array.Length)
-                    break;
-                array[i] = new KeyValuePair<string,string>(setting.Key,
-                                                           setting.Value);
-            }
-        }
-
-        /// <summary>
-        /// Removes the setting that matches the given KeyValuePair.
-        /// </summary>
-        /// <param name="pair">The KeyValuePair to remove.</param>
-        /// <returns>True if the setting was removed successfully.</returns>
-        public bool Remove(KeyValuePair<string, string> pair)
-        {
-            var match = new IniSetting(pair.Key, pair.Value);
-
-            foreach(var setting in GetSettings())
-                if(setting.Equals(match))
-                    return Remove(setting);
-
-            return false;
-        }
-
-        /// <summary>
+        // <summary>
         /// Removes a setting by its key.
         /// </summary>
         /// <param name="sectionName">The key of the setting to remove.</param>
-        public bool Remove(string settingKey)
+        public void Remove(string settingKey)
         {
-            return Remove(FindSetting(settingKey));
-        }
-
-        /// <summary>
-        /// Tries to get a setting's value by its key.
-        /// </summary>
-        /// <param name="key">The key to find.</param>
-        /// <param name="value">
-        /// Where to put the found value. Set to null if not found.
-        /// </param>
-        /// <returns>True if the value was found and set.</returns>
-        public bool TryGetValue(string key, out string value)
-        {
-            foreach(var setting in GetSettings())
-                if(setting.Key == key)
-                {
-                    value = setting.Value;
-                    return true;
-                }
-
-            value = null;
-            return false;
+            Remove(FindSetting(settingKey));
         }
 
         /// <summary>
@@ -179,41 +76,6 @@ namespace Mini
         internal void AddPart(IniPart part)
         {
             parts.Add(part);
-        }
-
-        /// <summary>
-        /// Creates a setting with the given key if it doesn't exist.
-        /// </summary>
-        /// <param name="key">The key of the setting to create.</param>
-        internal void CreateSetting(string key)
-        {
-            if(!Keys.Contains(key))
-                parts.Add(new IniSetting(key, string.Empty));
-        }
-
-        /// <summary>
-        /// Finds a setting by key.
-        /// </summary>
-        /// <param name="name">The key of the setting to find.</param>
-        /// <returns>The found setting or null.</returns>
-        internal IniSetting FindSetting(string key)
-        {
-            foreach(var part in parts)
-            {
-                var setting = part as IniSetting;
-                if(setting != null && setting.Key.Equals(key))
-                    return setting;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Removes a setting from the section.
-        /// </summary>
-        /// <param name="section">The setting to remove.</param>
-        internal bool Remove(IniSetting setting)
-        {
-            return parts.Remove(setting);
         }
 
         /// <summary>
@@ -230,21 +92,20 @@ namespace Mini
         }
 
         /// <summary>
-        /// Gets an enumerator of the settings held by this section.
+        /// Finds a setting by key.
         /// </summary>
-        /// <returns>
-        /// An enumerator of the settings held by this section.
-        /// </returns>
-        private IEnumerable<IniSetting> GetSettings()
+        /// <param name="name">The key of the setting to find.</param>
+        /// <returns>The found setting or null.</returns>
+        private IniSetting FindSetting(string key)
         {
             foreach(var part in parts)
             {
-                var partSetting = part as IniSetting;
-                if(partSetting != null)
-                    yield return partSetting;
+                var setting = part as IniSetting;
+                if(setting != null && setting.Key.Equals(key))
+                    return setting;
             }
+            return null;
         }
-
         #endregion
 
         #region Enumerator
@@ -254,11 +115,11 @@ namespace Mini
         /// <returns>
         /// An enumerator of settings of the section.
         /// </returns>
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        public IEnumerator<IniSetting> GetEnumerator()
         {
-            foreach(var setting in GetSettings())
-                yield return new KeyValuePair<string, string>(setting.Key,
-                                                              setting.Value);
+            foreach(var part in parts)
+                if(part is IniSetting)
+                    yield return (IniSetting)part;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -269,9 +130,9 @@ namespace Mini
 
         #region Indexer
         /// <value>
-        /// Gets or sets a section's setting via its key.
+        /// Gets a section's setting via its key.
         /// </value>
-        public string this[string key]
+        public IniSetting this[string key]
         {
             get
             {
@@ -284,19 +145,7 @@ namespace Mini
                     parts.Add(found);
                 }
 
-                return found.Value;
-            }
-
-            set
-            {
-                var found = FindSetting(key);
-                if(found == null)
-                {
-                    found = new IniSetting(key, value);
-                    parts.Add(found);
-                }
-                else
-                    found.Value = value;
+                return found;
             }
         }
 
@@ -320,60 +169,6 @@ namespace Mini
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Gets the number of held settings.
-        /// </summary>
-        public int Count
-        {
-            get
-            {
-                return parts.Count;
-            }
-        }
-
-        /// <summary>
-        /// Returns false.
-        /// </summary>
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Gets a collection of the keys of the held settings.
-        /// </summary>
-        public ICollection<string> Keys
-        {
-            get
-            {
-                List<string> keys = new List<string>(parts.Count);
-
-                foreach(var setting in GetSettings())
-                    keys.Add(setting.Key);
-
-                return keys;
-            }
-        }
-
-        /// <summary>
-        /// Gets a collection of the values of the held settings.
-        /// </summary>
-        public ICollection<string> Values
-        {
-            get
-            {
-                List<string> values = new List<string>(parts.Count);
-
-                foreach(var setting in GetSettings())
-                    values.Add(setting.Value);
-
-                return values;
-            }
         }
 
         /// <value>

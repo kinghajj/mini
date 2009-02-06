@@ -88,6 +88,7 @@ namespace Mini
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Removes a section from the INI file.
         /// </summary>
@@ -176,8 +177,7 @@ namespace Mini
                         if(section != null)
                         {
                             // Get this setting by its key.
-                            section.CreateSetting(pattern.Name);
-                            setting = section.FindSetting(pattern.Name);
+                            setting = section[pattern.Name];
                             // Set its comment and value.
                             setting.Comment = JoinComments(setting.Comment,
                                                            comment,
