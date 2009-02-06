@@ -25,7 +25,7 @@ using System.IO;
 
 namespace Mini
 {
-    public class IniSection : IniPart, IEnumerable<IniSetting>
+    public class IniSection : IniPart, ICollection<IniSetting>
     {
         private List<IniPart> parts;
 
@@ -52,21 +52,78 @@ namespace Mini
 
         #region Methods
         /// <summary>
-        /// Removes a setting from the section.
+        /// Adds a setting to the section.
         /// </summary>
-        /// <param name="section">The setting to remove.</param>
-        public void Remove(IniSetting setting)
+        /// <param name="setting">The setting to add to the section.</param>
+        public void Add(IniSetting setting)
         {
-            parts.Remove(setting);
+            AddPart(setting);
+        }
+
+        /// <summary>
+        /// Removes all parts from a section.
+        /// </summary>
+        public void Clear()
+        {
+            parts.Clear();
+        }
+
+        /// <summary>
+        /// Determines whether a section contains a setting.
+        /// </summary>
+        /// <param name="find">The setting to locate in the section.</param>
+        /// <returns>true if the setting is found; otherwise false.</returns>
+        public bool Contains(IniSetting find)
+        {
+            foreach(var setting in this)
+                if(setting == find)
+                    return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Copies the settings of the section to an Array, starting at a
+        /// particular Array index.
+        /// </summary>
+        /// <param name="array">
+        /// The one-dimensional Array that is the destination of the settings
+        /// copied from the section. The Array must have zero-based indexing.
+        /// </param>
+        /// <param name="i">
+        /// The zero-based index in array at which copying begins.
+        /// </param>
+        public void CopyTo(IniSetting[] array, int i)
+        {
+            foreach(var setting in this)
+            {
+                if(i >= array.Length) break;
+                array[i++] = setting;
+            }
+        }
+
+        /// <summary>
+        /// Removes the first occurrence of a specific setting from the section.
+        /// </summary>
+        /// <param name="section">
+        /// The setting to remove from the section.
+        /// </param>
+        /// <returns>
+        /// true if the setting was successfully removed from the section;
+        /// otherwise, false. This method also returns false if item is not
+        /// found in the original section.
+        /// </returns>
+        public bool Remove(IniSetting setting)
+        {
+            return parts.Remove(setting);
         }
 
         // <summary>
         /// Removes a setting by its key.
         /// </summary>
         /// <param name="sectionName">The key of the setting to remove.</param>
-        public void Remove(string settingKey)
+        public bool Remove(string settingKey)
         {
-            Remove(FindSetting(settingKey));
+            return Remove(FindSetting(settingKey));
         }
 
         /// <summary>
@@ -98,12 +155,9 @@ namespace Mini
         /// <returns>The found setting or null.</returns>
         private IniSetting FindSetting(string key)
         {
-            foreach(var part in parts)
-            {
-                var setting = part as IniSetting;
-                if(setting != null && setting.Key.Equals(key))
+            foreach(var setting in this)
+                if(setting.Key == key)
                     return setting;
-            }
             return null;
         }
         #endregion
@@ -118,8 +172,11 @@ namespace Mini
         public IEnumerator<IniSetting> GetEnumerator()
         {
             foreach(var part in parts)
-                if(part is IniSetting)
-                    yield return (IniSetting)part;
+            {
+                var setting = part as IniSetting;
+                if(setting != null)
+                    yield return setting;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -169,6 +226,28 @@ namespace Mini
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Gets the number of parts contained in the section.
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                return parts.Count;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the section is read-only.
+        /// </summary>
+        public bool IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
         }
 
         /// <value>
