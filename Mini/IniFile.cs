@@ -16,12 +16,6 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* IniFile.cs - Represents an INI file.
- * 
- * This is the core class of the library. It is the one and only entrypoint into
- * the library, and, hopefully, is easy to use.
- */
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,6 +24,13 @@ using System.Text;
 
 namespace Mini
 {
+    /// <summary>
+    /// Represents an INI file.
+    /// </summary>
+    /// <remarks>
+    /// This is the core class of the library. It is the one and only entrypoint
+    /// into the library, and, hopefully, is easy to use.
+    /// </remarks>
     public class IniFile : IEnumerable<IniSection>
     {
         private List<IniPart> parts;
@@ -50,7 +51,7 @@ namespace Mini
         /// </summary>
         /// <param name="stream">
         /// The stream from which to read the INI file.
-        /// This stream will be closed.
+        /// This stream will be closed before this method completes.
         /// </param>
         public IniFile(StreamReader stream)
             : this()
@@ -76,7 +77,7 @@ namespace Mini
         }
 
         /// <summary>
-        /// Opens an INI file from a path.
+        /// Opens an INI file from a path with the default encoding.
         /// </summary>
         /// <param name="path">
         /// The path to the INI file.
@@ -88,7 +89,6 @@ namespace Mini
         #endregion
 
         #region Methods
-
         /// <summary>
         /// Removes a section from the INI file.
         /// </summary>
@@ -119,7 +119,7 @@ namespace Mini
         /// Saves the file using the given path.
         /// </summary>
         /// <param name="path">
-        /// The path to save the file.
+        /// The path into which to save the file.
         /// </param>
         public void SaveAs(string path)
         {
@@ -135,6 +135,8 @@ namespace Mini
         /// <returns>The found section or null.</returns>
         private IniSection FindSection(string name)
         {
+            // with LINQ, this code could be simplified to
+            // return parts.OfType<IniSection>.FirstOrDefault(s => s.Name == name);
             foreach(var part in parts)
             {
                 var section = part as IniSection;

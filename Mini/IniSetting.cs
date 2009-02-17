@@ -16,13 +16,13 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* IniSetting.cs - Represents a setting in an INI file.
- */
-
 using System.IO;
 
 namespace Mini
 {
+    /// <summary>
+    /// Represents a setting in an INI file.
+    /// </summary>
     public class IniSetting : IniPart
     {
         #region Constructors

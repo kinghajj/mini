@@ -16,15 +16,15 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* IniSection.cs - Represents a section in an INI file.
- */
-
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Mini
 {
+    /// <summary>
+    /// Represents a section in an INI file.
+    /// </summary>
     public class IniSection : IniPart, ICollection<IniSetting>
     {
         private List<IniPart> parts;

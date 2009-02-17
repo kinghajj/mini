@@ -16,21 +16,26 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* IniComment.cs - Represents a comment in an INI file.
- * 
- * Usually, these objects are only created for "lone" comments, because other
- * INI parts keep track of their comments separately, but they do use this class
- * to write their comments to an output stream.
- */
-
 using System;
 using System.IO;
 
 namespace Mini
 {
+    /// <summary>
+    /// Represents a comment in an INI file.
+    /// </summary>
+    /// <remarks>
+    /// Usually, these objects are only created for "lone" comments, because
+    /// other INI parts keep track of their comments separately, but they do use
+    /// this class to write their comments to an output stream.
+    /// </remarks>
     class IniComment : IniPart
     {
         #region Constructors
+        /// <summary>
+        /// Construct a comment with the given text.
+        /// </summary>
+        /// <param name="comment">The text to use as a comment.</param>
         internal IniComment(string comment)
         {
             Comment = comment;
@@ -51,7 +56,8 @@ namespace Mini
         /// Writes the comment to an output stream.
         /// </summary>
         /// <param name="writer">The stream to write to.</param>
-        /// <param name="endWithNewline">Whether to write a newline after the comment.</param>
+        /// <param name="endWithNewline">Whether to write a newline after the
+        /// comment.</param>
         internal void Write(StreamWriter writer, bool endWithNewline)
         {
             var newline = Environment.NewLine.ToCharArray();
@@ -67,7 +73,7 @@ namespace Mini
 
         #region Properties
         /// <summary>
-        /// Get or set the comment as a string.
+        /// Gets or sets the comment.
         /// </summary>
         public string Comment
         {

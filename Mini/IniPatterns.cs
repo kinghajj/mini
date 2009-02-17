@@ -16,12 +16,6 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* IniPatterns.cs - "Tokenizer" for INI files.
- * 
- * This class uses regular expressions to break up lines of an INI file into
- * their important parts, in effect tokenizing them for the parser.
- */
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,6 +52,10 @@ namespace Mini
     /// <summary>
     /// Finds and matches patterns of INI files.
     /// </summary>
+    /// <remarks>
+    /// This class uses regular expressions to break up lines of an INI file
+    /// into their important parts, in effect tokenizing them for the parser.
+    /// </remarks>
     internal class IniPatterns : IEnumerable<IniPattern>
     {
         private Match last_match;
