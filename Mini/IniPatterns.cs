@@ -204,14 +204,9 @@ namespace Mini
              */
             @"^\s*(?<name>\w+)\s*=\s*" +
             /* ...then any number of non-semicolon characters, which are the
-             * value, then by any number of spaces...
+             * value, then by any number of spaces.
              */
-            @"(?<value>[^\;]*)\s*" +
-            /* ...then by any number of semicolons, possibly a space, then any
-             * number of characters, which are the comment, then the string
-             * ends.
-             */
-            @";*\s?(?<comment>.*)$";
+            @"(?<value>.*)\s*$";
         #endregion
     }
 }
