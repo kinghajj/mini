@@ -186,9 +186,13 @@ namespace Mini
         #endregion
 
         #region Indexer
-        /// <value>
+        /// <summary>
         /// Gets a section's setting via its key.
-        /// </value>
+        /// </summary>
+        /// <remarks>
+        /// If a setting with the given key does not exist, it will be created
+        /// and set to the empty string.
+        /// </remarks>
         public IniSetting this[string key]
         {
             get

@@ -249,9 +249,13 @@ namespace Mini
         #endregion
 
         #region Indexers
-        /// <value>
+        /// <summary>
         /// Gets a file's section via its name.
-        /// </value>
+        /// </summary>
+        /// <remarks>
+        /// If a section with the given name does not exist, it will be created
+        /// and have no settings.
+        /// </remarks>
         public IniSection this[string name]
         {
             get
