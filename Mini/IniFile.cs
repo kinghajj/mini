@@ -90,6 +90,17 @@ namespace Mini
 
         #region Methods
         /// <summary>
+        /// Determines whether an IniFile contains an IniSection with the given
+        /// name.
+        /// </summary>
+        /// <param name="name">The name of the section to find.</param>
+        /// <returns>true if the section found, else false.</returns>
+        public bool HasSection(string name)
+        {
+            return FindSection(name) != null;
+        }
+
+        /// <summary>
         /// Removes a section from the INI file.
         /// </summary>
         /// <param name="section">The section to remove.</param>

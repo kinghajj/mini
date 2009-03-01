@@ -102,6 +102,17 @@ namespace Mini
         }
 
         /// <summary>
+        /// Determines whether an IniSection contains an IniSetting with the
+        /// given key.
+        /// </summary>
+        /// <param name="key">The key of the setting to find.</param>
+        /// <returns>true if a setting found, else false.</returns>
+        public bool HasSetting(string key)
+        {
+            return FindSetting(key) != null;
+        }
+
+        /// <summary>
         /// Removes the first occurrence of a specific setting from the section.
         /// </summary>
         /// <param name="section">
