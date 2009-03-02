@@ -20,6 +20,7 @@
  */
 
 using System;
+using System.Diagnostics;
 
 namespace Mini.Test
 {
@@ -27,8 +28,9 @@ namespace Mini.Test
     {
         static void Main(string[] args)
         {
+            var watch = new Stopwatch();
             var startMem = GC.GetTotalMemory(true);
-            var start = DateTime.Now;
+            watch.Start();
 
             var ini = new IniFile("test.ini");
             ini["User"]["Name"].Value = "md5sum";
@@ -40,10 +42,9 @@ namespace Mini.Test
             ini["User"].Comment = "These are the basic user settings.\nDon't modify them unless you know what you're doing.";
             ini.SaveAs("test2.ini");
 
-            var end = DateTime.Now;
+            watch.Start();
             var endMem = GC.GetTotalMemory(true);
-            var elapsed = end.Ticks - start.Ticks;
-            Console.WriteLine("{0} Ticks", elapsed);
+            Console.WriteLine("{0} Ticks", watch.ElapsedTicks);
             Console.WriteLine("Mem Start: {0}", startMem);
             Console.WriteLine("    End:   {0}", endMem);
         }
