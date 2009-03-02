@@ -16,6 +16,7 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.IO;
 
 namespace Mini
@@ -23,7 +24,7 @@ namespace Mini
     /// <summary>
     /// Represents a setting in an INI file.
     /// </summary>
-    public class IniSetting : IniPart
+    public class IniSetting : IniPart, IEquatable<IniSetting>
     {
         #region Constructors
         /// <summary>
@@ -47,6 +48,36 @@ namespace Mini
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Tests whether two IniSettings are equal.
+        /// </summary>
+        /// <param name="other">The other setting to compare.</param>
+        /// <returns>true if they are equal, else false.</returns>
+        public bool Equals(IniSetting other)
+        {
+            return GetHashCode() == other.GetHashCode();
+        }
+
+        /// <summary>
+        /// Tests whether an IniSetting equals an object.
+        /// </summary>
+        /// <param name="obj">The object to compare.</param>
+        /// <returns>true if they are equal, else false.</returns>
+        public override bool Equals(object obj)
+        {
+            var other = obj as IniSection;
+            return other == null ? false : Equals(other);
+        }
+
+        /// <summary>
+        /// Gets the hash code of an IniSetting.
+        /// </summary>
+        /// <returns>The setting's hash code.</returns>
+        public override int GetHashCode()
+        {
+            return Comment.GetHashCode() ^ Key.GetHashCode() ^ Value.GetHashCode();
+        }
+
         /// <summary>
         /// Writes the setting to an output stream.
         /// </summary>
