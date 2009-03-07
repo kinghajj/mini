@@ -99,7 +99,7 @@ namespace Mini
         /// <returns>true if the section found, else false.</returns>
         public bool HasSection(string name)
         {
-            return FindSection(name) != null;
+            return this.Any(section => section.Name == name);
         }
 
         /// <summary>
@@ -150,8 +150,7 @@ namespace Mini
         /// </param>
         public void Write(TextWriter writer)
         {
-            foreach(var part in parts)
-                part.Write(writer);
+            parts.ForEach(part => part.Write(writer));
         }
         #endregion
 
@@ -279,10 +278,7 @@ namespace Mini
 
                 // if not, create it and add it.
                 if(found == null)
-                {
-                    found = new IniSection(name, string.Empty);
-                    parts.Add(found);
-                }
+                    parts.Add(found = new IniSection(name, string.Empty));
 
                 return found;
             }
