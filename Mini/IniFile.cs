@@ -219,19 +219,15 @@ namespace Mini
         /// <summary>
         /// Joins together multiple comments.
         /// </summary>
-        /// <param name="current">A section's or setting's current comment.</param>
+        /// <param name="previous">A section's or setting's previous comment.</param>
         /// <param name="built">The current built-up comment.</param>
         /// <param name="last">The last parsed comment.</param>
         /// <returns>A new, joined comment.</returns>
-        private static string JoinComments(string current, string built,
+        private static string JoinComments(string previous, string built,
                                            string last)
         {
-            return
-                string.IsNullOrEmpty(current)
-                    ? (string.IsNullOrEmpty(built)
-                          ? last
-                          : string.Concat(built, Environment.NewLine, last))
-                    : string.Concat(current, Environment.NewLine, built, last);
+            return string.Join(Environment.NewLine,
+                               new string[] { previous, built, last });
         }
         #endregion
 
@@ -248,7 +244,7 @@ namespace Mini
                 if(part is IniSection)
                     yield return (IniSection)part;
         }
-        
+
         /// <summary>
         /// Silly required function.
         /// </summary>
