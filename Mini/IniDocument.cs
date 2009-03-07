@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Mini
@@ -162,15 +163,7 @@ namespace Mini
         /// <returns>The found section or null.</returns>
         private IniSection FindSection(string name)
         {
-            // with LINQ, this code could be simplified to
-            // return parts.OfType<IniSection>.FirstOrDefault(s => s.Name == name);
-            foreach(var part in parts)
-            {
-                var section = part as IniSection;
-                if(section != null && section.Name.Equals(name))
-                    return section;
-            }
-            return null;
+            return parts.OfType<IniSection>().FirstOrDefault(s => s.Name == name);
         }
 
         /// <summary>
@@ -257,9 +250,7 @@ namespace Mini
         /// </returns>
         public IEnumerator<IniSection> GetEnumerator()
         {
-            foreach(var part in parts)
-                if(part is IniSection)
-                    yield return (IniSection)part;
+            return parts.OfType<IniSection>().GetEnumerator();
         }
 
         /// <summary>

@@ -19,6 +19,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Mini
 {
@@ -74,13 +75,9 @@ namespace Mini
         /// </summary>
         /// <param name="find">The setting to locate in the section.</param>
         /// <returns>true if the setting is found; otherwise false.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId = "0#")]
         public bool Contains(IniSetting item)
         {
-            foreach(var setting in this)
-                if(setting == item)
-                    return true;
-            return false;
+            return this.Any(setting => setting == item);
         }
 
         /// <summary>
@@ -111,7 +108,7 @@ namespace Mini
         /// <returns>true if a setting found, else false.</returns>
         public bool HasSetting(string key)
         {
-            return FindSetting(key) != null;
+            return this.Any(setting => setting.Key == key);
         }
 
         /// <summary>
@@ -172,10 +169,7 @@ namespace Mini
         /// <returns>The found setting or null.</returns>
         private IniSetting FindSetting(string key)
         {
-            foreach(var setting in this)
-                if(setting.Key == key)
-                    return setting;
-            return null;
+            return this.FirstOrDefault(setting => setting.Key == key);
         }
         #endregion
         #endregion
@@ -189,12 +183,7 @@ namespace Mini
         /// </returns>
         public IEnumerator<IniSetting> GetEnumerator()
         {
-            foreach(var part in parts)
-            {
-                var setting = part as IniSetting;
-                if(setting != null)
-                    yield return setting;
-            }
+            return parts.OfType<IniSetting>().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
