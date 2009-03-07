@@ -29,7 +29,7 @@ namespace Mini.Test
         static void Main(string[] args)
         {
             var watch = new Stopwatch();
-            var startMem = GC.GetTotalMemory(true);
+            var startMem = GC.GetTotalMemory(false);
             watch.Start();
 
             var ini = new IniFile("test.ini");
@@ -42,9 +42,10 @@ namespace Mini.Test
             ini["User"].Comment = "These are the basic user settings.\nDon't modify them unless you know what you're doing.";
             ini.SaveAs("test2.ini");
 
-            watch.Start();
-            var endMem = GC.GetTotalMemory(true);
+            watch.Stop();
+            var endMem = GC.GetTotalMemory(false);
             Console.WriteLine("{0} Ticks", watch.ElapsedTicks);
+            Console.WriteLine("{0} Milliseconds", watch.ElapsedMilliseconds);
             Console.WriteLine("Mem Start: {0}", startMem);
             Console.WriteLine("    End:   {0}", endMem);
         }
