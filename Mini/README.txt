@@ -52,7 +52,7 @@ Here's a simple example of how this works.
     ; This is a continuation of the previous comment.
     [Foo] ; Yet another comment on this section!
     ; This comment is associated with the following setting.
-    Bar = Baz ; Do you get the idea yet?
+    Bar = Baz
 
 If this gets parsed then re-written unchanged, the file will look like this.
 
@@ -63,7 +63,6 @@ If this gets parsed then re-written unchanged, the file will look like this.
     ; Yet another comment on this section!
     [Foo]
     ; This comment is associated with the following setting.
-    ; Do you get the idea yet?
     Bar = Baz
 
 As you can see, whether a comment appeared on the same line or the previous
