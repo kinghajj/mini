@@ -111,25 +111,25 @@ namespace Mini
         private IniPatternKind MatchWithPattern(string input)
         {
             var found_kind = IniPatternKind.None;
+            Regex pattern;
+            Match match;
 
             // Try to match the input against all know INI kinds.
             foreach(IniPatternKind kind in
                     Enum.GetValues(typeof(IniPatternKind)))
             {
-                // If there's a pattern for this kind,
-                Regex pattern = GetPattern(kind);
-                if(pattern != null)
-                {
-                    // Try to match it against the pattern for that kind.
-                    var match = pattern.Match(input);
-                    // If the match works, store it.
-                    if(match.Success)
-                    {
-                        found_kind = kind;
-                        last_match = match;
-                        break;
-                    }
-                }
+                // If there's no pattern for this kind, skip it.
+                if((pattern = GetPattern(kind)) == null)
+                    continue;
+
+                // If this pattern doesn't match the input, skip it.
+                if(!(match = pattern.Match(input)).Success)
+                    continue;
+
+                // If the match works, store it and break the loop.
+                found_kind = kind;
+                last_match = match;
+                break;
             }
 
             return found_kind;
