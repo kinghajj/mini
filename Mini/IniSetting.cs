@@ -79,6 +79,36 @@ namespace Mini
         }
 
         /// <summary>
+        /// Compares two IniSettings for equality.
+        /// </summary>
+        /// <param name="a">The first IniSetting.</param>
+        /// <param name="b">The second IniSetting.</param>
+        /// <returns>true if they are equal, else false.</returns>
+        public static bool operator ==(IniSetting a, IniSetting b)
+        {
+            if(object.ReferenceEquals(a, null) ||
+               object.ReferenceEquals(b, null))
+                return object.ReferenceEquals(a, null) && object.ReferenceEquals(b, null);
+
+            return a.Equals(b);
+        }
+
+        /// <summary>
+        /// Compares two IniSettings for inequality.
+        /// </summary>
+        /// <param name="a">The first IniSetting.</param>
+        /// <param name="b">The second IniSetting.</param>
+        /// <returns>true if they are not equal, else false.</returns>
+        public static bool operator !=(IniSetting a, IniSetting b)
+        {
+            if(object.ReferenceEquals(a, null) ||
+               object.ReferenceEquals(b, null))
+                return !(object.ReferenceEquals(a, null) && object.ReferenceEquals(b, null));
+
+            return !a.Equals(b);
+        }
+
+        /// <summary>
         /// Writes the setting to an output stream.
         /// </summary>
         /// <param name="writer">The stream to write to.</param>
