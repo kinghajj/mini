@@ -31,6 +31,6 @@ namespace Mini
     /// </remarks>
     public abstract class IniPart
     {
-        abstract internal void Write(StreamWriter writer);
+        abstract internal void Write(TextWriter writer);
     }
 }

@@ -112,7 +112,7 @@ namespace Mini
         /// Writes the setting to an output stream.
         /// </summary>
         /// <param name="writer">The stream to write to.</param>
-        override internal void Write(StreamWriter writer)
+        override internal void Write(TextWriter writer)
         {
             IniComment.Write(Comment, writer, false);
             writer.WriteLine("{0}={1}", Key, Value);

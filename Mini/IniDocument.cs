@@ -135,8 +135,18 @@ namespace Mini
         public void SaveAs(string path)
         {
             using(var writer = new StreamWriter(path, false, Encoding))
-                foreach(var part in parts)
-                    part.Write(writer);
+                Write(writer);
+        }
+
+        /// <summary>
+        /// Writes the document using the given TextWriter.
+        /// </summary>
+        /// <param name="writer">The TextWriter to write the document to.
+        /// </param>
+        public void Write(TextWriter writer)
+        {
+            foreach(var part in parts)
+                part.Write(writer);
         }
 
         /// <summary>

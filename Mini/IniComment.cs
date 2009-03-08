@@ -47,7 +47,7 @@ namespace Mini
         /// Writes the comment to an output stream.
         /// </summary>
         /// <param name="writer">The stream to write to.</param>
-        override internal void Write(StreamWriter writer)
+        override internal void Write(TextWriter writer)
         {
             Write(writer, true);
         }
@@ -58,7 +58,7 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         /// <param name="endWithNewline">Whether to write a newline after the
         /// comment.</param>
-        internal void Write(StreamWriter writer, bool endWithNewline)
+        internal void Write(TextWriter writer, bool endWithNewline)
         {
             Write(Comment, writer, endWithNewline);
         }
@@ -70,7 +70,7 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         /// <param name="endWithNewline">Whether to write a newline after the
         /// comment.</param>
-        internal static void Write(string comment, StreamWriter writer, bool endWithNewline)
+        internal static void Write(string comment, TextWriter writer, bool endWithNewline)
         {
             var newline = Environment.NewLine.ToCharArray();
 
