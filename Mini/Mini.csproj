@@ -35,7 +35,7 @@
     <Compile Include="IniComment.cs" />
     <Compile Include="IniPart.cs" />
     <Compile Include="IniPatterns.cs" />
-    <Compile Include="IniFile.cs" />
+    <Compile Include="IniDocument.cs" />
     <Compile Include="IniSection.cs" />
     <Compile Include="IniSetting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
