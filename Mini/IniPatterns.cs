@@ -117,11 +117,11 @@ namespace Mini
                     Enum.GetValues(typeof(IniPatternKind)))
             {
                 // If there's a pattern for this kind,
-                string pattern = GetPattern(kind);
-                if(!string.IsNullOrEmpty(pattern))
+                Regex pattern = GetPattern(kind);
+                if(pattern != null)
                 {
                     // Try to match it against the pattern for that kind.
-                    var match = Regex.Match(input, pattern);
+                    var match = pattern.Match(input);
                     // If the match works, store it.
                     if(match.Success)
                     {
@@ -138,9 +138,9 @@ namespace Mini
         /// <summary>
         /// Returns the pattern string for a kind of pattern.
         /// </summary>
-        private static string GetPattern(IniPatternKind kind)
+        private static Regex GetPattern(IniPatternKind kind)
         {
-            string pattern = string.Empty;
+            Regex pattern = null;
 
             switch(kind)
             {
@@ -187,26 +187,26 @@ namespace Mini
          * followed by a space, then any number of characters, which are the
          * comment, then the string ends.
          */
-        private static string comment =
-            @"^\s*;+\s?(?<comment>.*)$";
+        private static Regex comment =
+            new Regex(@"^\s*;+\s?(?<comment>.*)$");
         /* Sections start with any number of spaces, then a [, then any number
          * of spaces, then one or more characters, which are the name, then any
          * number of spaces, then a ], then any number of spaces, then possibly
          * any number of semicolons, then possibly any number of characters,
          * which are the comment, then the string ends.
          */
-        private static string section =
-            @"^\s*\[\s*(?<name>[\w\s\.]*\w)\s*\]\s*;*\s?(?<comment>.*)$";
-        private static string setting =
+        private static Regex section =
+            new Regex(@"^\s*\[\s*(?<name>[\w\s\.]*\w)\s*\]\s*;*\s?(?<comment>.*)$");
+        private static Regex setting =
             /* Settings start with any number of spaces, then one or more word
              * characters, which are the name, then any number of spaces, an
              * equal sign, then any number of spaces...
              */
-            @"^\s*(?<name>\w+)\s*=\s*" +
+            new Regex(@"^\s*(?<name>\w+)\s*=\s*" +
             /* ...then any number of non-semicolon characters, which are the
              * value, then by any number of spaces.
              */
-            @"(?<value>.*)\s*$";
+            @"(?<value>.*)\s*$");
         #endregion
     }
 }
