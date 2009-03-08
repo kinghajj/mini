@@ -53,7 +53,7 @@ namespace Mini
         /// The stream from which to read the INI file.
         /// This stream will be closed before this method completes.
         /// </param>
-        public IniDocument(StreamReader stream)
+        public IniDocument(TextReader stream)
             : this()
         {
             Parse(stream);
@@ -174,7 +174,7 @@ namespace Mini
         /// Parses an input stream into as an INI file.
         /// </summary>
         /// <param name="stream">The stream to parse.</param>
-        private void Parse(StreamReader stream)
+        private void Parse(TextReader stream)
         {
             string comment = string.Empty;
             IniSection section = null;

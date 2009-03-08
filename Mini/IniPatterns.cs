@@ -59,10 +59,10 @@ namespace Mini
     internal class IniPatterns : IEnumerable<IniPattern>
     {
         private Match last_match;
-        private StreamReader stream;
+        private TextReader stream;
 
         #region Constructors
-        public IniPatterns(StreamReader input)
+        public IniPatterns(TextReader input)
         {
             stream = input;
         }
@@ -168,8 +168,22 @@ namespace Mini
         /// </returns>
         public IEnumerator<IniPattern> GetEnumerator()
         {
-            while(!stream.EndOfStream)
-                yield return GetNextPattern();
+            IniPattern pattern = null;
+            bool run = true;
+
+            while(run)
+            {
+                try
+                {
+                    pattern = GetNextPattern();
+                }
+                catch(ArgumentNullException)
+                {
+                    run = false;
+                }
+                if(run)
+                    yield return pattern;
+            }
         }
 
         /// <summary>
