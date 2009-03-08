@@ -31,7 +31,7 @@ namespace Mini
     /// This is the core class of the library. It is the one and only entrypoint
     /// into the library, and, hopefully, is easy to use.
     /// </remarks>
-    public class IniFile : IEnumerable<IniSection>
+    public class IniDocument : IEnumerable<IniSection>
     {
         private List<IniPart> parts;
 
@@ -39,7 +39,7 @@ namespace Mini
         /// <summary>
         /// Creates a new, blank INI file.
         /// </summary>
-        public IniFile()
+        public IniDocument()
         {
             parts    = new List<IniPart>();
             Path     = string.Empty;
@@ -53,7 +53,7 @@ namespace Mini
         /// The stream from which to read the INI file.
         /// This stream will be closed before this method completes.
         /// </param>
-        public IniFile(StreamReader stream)
+        public IniDocument(StreamReader stream)
             : this()
         {
             Parse(stream);
@@ -69,7 +69,7 @@ namespace Mini
         /// <param name="encoding">
         /// An encoding with which to interpret the INI file.
         /// </param>
-        public IniFile(string path, Encoding encoding)
+        public IniDocument(string path, Encoding encoding)
             : this(new StreamReader(path, encoding))
         {
             Path     = path;
@@ -82,7 +82,7 @@ namespace Mini
         /// <param name="path">
         /// The path to the INI file.
         /// </param>
-        public IniFile(string path)
+        public IniDocument(string path)
             : this(path, Encoding.Default)
         {
         }
@@ -90,7 +90,7 @@ namespace Mini
 
         #region Methods
         /// <summary>
-        /// Determines whether an IniFile contains an IniSection with the given
+        /// Determines whether an IniDocument contains an IniSection with the given
         /// name.
         /// </summary>
         /// <param name="name">The name of the section to find.</param>

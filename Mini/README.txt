@@ -77,6 +77,6 @@ kept.
 
 Using Mini is very straightforward.
 
-    var ini = new IniFile("test.ini");
+    var ini = new IniDocument("test.ini");
     ini["Section"]["Setting"].Value = "Foo";
     ini.Save();

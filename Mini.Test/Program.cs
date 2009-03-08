@@ -32,7 +32,7 @@ namespace Mini.Test
             var startMem = GC.GetTotalMemory(false);
             watch.Start();
 
-            var ini = new IniFile("test.ini");
+            var ini = new IniDocument("test.ini");
             ini["User"]["Name"].Value = "md5sum";
             ini["User"]["PasswordHash"].Value = "e65b0dce58cbecf21e7c9ff7318f3b57";
             ini["User"]["RemoveThis"].Value = "This shouldn'd stay.";
