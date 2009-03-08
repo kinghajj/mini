@@ -29,7 +29,7 @@ namespace Mini
     /// other INI parts keep track of their comments separately, but they do use
     /// this class to write their comments to an output stream.
     /// </remarks>
-    class IniComment : IniPart
+    public class IniComment : IniPart
     {
         #region Constructors
         /// <summary>
@@ -60,11 +60,23 @@ namespace Mini
         /// comment.</param>
         internal void Write(StreamWriter writer, bool endWithNewline)
         {
+            Write(Comment, writer, endWithNewline);
+        }
+
+        /// <summary>
+        /// Writes a string comment to an output stream.
+        /// </summary>
+        /// <param name="comment">The comment to write.</param>
+        /// <param name="writer">The stream to write to.</param>
+        /// <param name="endWithNewline">Whether to write a newline after the
+        /// comment.</param>
+        internal static void Write(string comment, StreamWriter writer, bool endWithNewline)
+        {
             var newline = Environment.NewLine.ToCharArray();
 
-            if(!String.IsNullOrEmpty(Comment))
-                foreach(var comment in Comment.Split(newline, StringSplitOptions.RemoveEmptyEntries))
-                    writer.WriteLine("; {0}", comment);
+            if(!String.IsNullOrEmpty(comment))
+                foreach(var c in comment.Split(newline, StringSplitOptions.RemoveEmptyEntries))
+                    writer.WriteLine("; {0}", c);
 
             if(endWithNewline)
                 writer.WriteLine();

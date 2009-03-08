@@ -152,7 +152,7 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         override internal void Write(StreamWriter writer)
         {
-            new IniComment(Comment).Write(writer, false);
+            IniComment.Write(Comment, writer, false);
             writer.WriteLine("[{0}]", Name);
             foreach(var part in parts)
                 part.Write(writer);
