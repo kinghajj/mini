@@ -89,6 +89,7 @@ namespace Mini
         #endregion
 
         #region Methods
+        #region Public
         /// <summary>
         /// Determines whether an IniDocument contains an IniSection with the given
         /// name.
@@ -148,7 +149,9 @@ namespace Mini
             foreach(var part in parts)
                 part.Write(writer);
         }
+        #endregion
 
+        #region Private
         /// <summary>
         /// Finds a section by name.
         /// </summary>
@@ -239,6 +242,7 @@ namespace Mini
             return string.Join(Environment.NewLine,
                                new string[] { previous, built, last });
         }
+        #endregion
         #endregion
 
         #region Enumerator

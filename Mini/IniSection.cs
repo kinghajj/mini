@@ -51,6 +51,7 @@ namespace Mini
         #endregion
 
         #region Methods
+        #region Public
         /// <summary>
         /// Adds a setting to the section.
         /// </summary>
@@ -136,7 +137,9 @@ namespace Mini
         {
             return Remove(FindSetting(settingKey));
         }
+        #endregion
 
+        #region Internal
         /// <summary>
         /// Adds a part to a section's list of INI parts.
         /// </summary>
@@ -158,7 +161,9 @@ namespace Mini
                 part.Write(writer);
             writer.WriteLine();
         }
+        #endregion
 
+        #region Private
         /// <summary>
         /// Finds a setting by key.
         /// </summary>
@@ -171,6 +176,7 @@ namespace Mini
                     return setting;
             return null;
         }
+        #endregion
         #endregion
 
         #region Enumerator
@@ -268,7 +274,11 @@ namespace Mini
         /// <value>
         /// Get or set a section's name.
         /// </value>
-        public string Name { get; set; }
+        public string Name
+        {
+            get;
+            set;
+        }
         #endregion
     }
 }
