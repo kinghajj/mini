@@ -116,7 +116,7 @@ namespace Mini
         /// <summary>
         /// Removes the first occurrence of a specific setting from the section.
         /// </summary>
-        /// <param name="section">
+        /// <param name="setting">
         /// The setting to remove from the section.
         /// </param>
         /// <returns>
@@ -129,10 +129,10 @@ namespace Mini
             return parts.Remove(setting);
         }
 
-        // <summary>
+        /// <summary>
         /// Removes a setting by its key.
         /// </summary>
-        /// <param name="sectionName">The key of the setting to remove.</param>
+        /// <param name="sectionKey">The key of the setting to remove.</param>
         public bool Remove(string settingKey)
         {
             return Remove(FindSetting(settingKey));
