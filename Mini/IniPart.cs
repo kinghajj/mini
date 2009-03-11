@@ -22,7 +22,7 @@ using System.IO;
 namespace Mini
 {
     /// <summary>
-    /// An abstract class that represents part of an INI file.
+    /// An abstract class that represents part of an INI document.
     /// </summary>
     /// <remarks>
     /// The only thing that really unites the various parts of an INI is that

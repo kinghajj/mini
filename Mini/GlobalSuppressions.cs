@@ -23,3 +23,9 @@
 // Who cares if we don't have many types, that's actually a Good Thing, since it
 // makes the library smaller and simpler.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Mini")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ini", Scope = "type", Target = "Mini.IniComment")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId = "0#", Scope = "member", Target = "Mini.IniSection.#Add(Mini.IniSetting)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "a", Scope = "member", Target = "Mini.IniSetting.#op_Equality(Mini.IniSetting,Mini.IniSetting)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "b", Scope = "member", Target = "Mini.IniSetting.#op_Equality(Mini.IniSetting,Mini.IniSetting)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "a", Scope = "member", Target = "Mini.IniSetting.#op_Inequality(Mini.IniSetting,Mini.IniSetting)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "b", Scope = "member", Target = "Mini.IniSetting.#op_Inequality(Mini.IniSetting,Mini.IniSetting)")]

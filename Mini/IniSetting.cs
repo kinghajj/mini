@@ -22,7 +22,7 @@ using System.IO;
 namespace Mini
 {
     /// <summary>
-    /// Represents a setting in an INI file.
+    /// Represents a setting in an INI document.
     /// </summary>
     public class IniSetting : IniPart, IEquatable<IniSetting>
     {
@@ -129,15 +129,23 @@ namespace Mini
             set;
         }
 
-        /// <value>
+        /// <summary>
         /// Gets or sets a setting's key.
-        /// </value>
-        public string Key { get; set; }
+        /// </summary>
+        public string Key
+        {
+            get;
+            set;
+        }
 
-        /// <value>
+        /// <summary>
         /// Gets or sets a settings's value.
-        /// </value>
-        public string Value { get; set; }
+        /// </summary>
+        public string Value
+        {
+            get;
+            set;
+        }
         #endregion
     }
 }

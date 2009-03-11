@@ -23,7 +23,7 @@ using System.IO;
 namespace Mini
 {
     /// <summary>
-    /// Represents a section in an INI file.
+    /// Represents a section in an INI document.
     /// </summary>
     public class IniSection : IniPart, ICollection<IniSetting>
     {
@@ -31,7 +31,7 @@ namespace Mini
 
         #region Constructors
         /// <summary>
-        /// Create a new INI section with the given name, comment, and file.
+        /// Create a new INI section with the given name, comment, and document.
         /// </summary>
         /// <param name="name">
         /// The section's name.
@@ -40,7 +40,7 @@ namespace Mini
         /// The section's comment.
         /// </param>
         /// <param name="ini">
-        /// The file to which the section belongs.
+        /// The document to which the section belongs.
         /// </param>
         internal IniSection(string name, string comment)
         {
@@ -56,9 +56,9 @@ namespace Mini
         /// Adds a setting to the section.
         /// </summary>
         /// <param name="setting">The setting to add to the section.</param>
-        public void Add(IniSetting setting)
+        public void Add(IniSetting item)
         {
-            AddPart(setting);
+            AddPart(item);
         }
 
         /// <summary>
@@ -74,10 +74,11 @@ namespace Mini
         /// </summary>
         /// <param name="find">The setting to locate in the section.</param>
         /// <returns>true if the setting is found; otherwise false.</returns>
-        public bool Contains(IniSetting find)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId = "0#")]
+        public bool Contains(IniSetting item)
         {
             foreach(var setting in this)
-                if(setting == find)
+                if(setting == item)
                     return true;
             return false;
         }
@@ -93,12 +94,12 @@ namespace Mini
         /// <param name="i">
         /// The zero-based index in array at which copying begins.
         /// </param>
-        public void CopyTo(IniSetting[] array, int i)
+        public void CopyTo(IniSetting[] array, int arrayIndex)
         {
             foreach(var setting in this)
             {
-                if(i >= array.Length) break;
-                array[i++] = setting;
+                if(arrayIndex >= array.Length) break;
+                array[arrayIndex++] = setting;
             }
         }
 
@@ -124,9 +125,9 @@ namespace Mini
         /// otherwise, false. This method also returns false if item is not
         /// found in the original section.
         /// </returns>
-        public bool Remove(IniSetting setting)
+        public bool Remove(IniSetting item)
         {
-            return parts.Remove(setting);
+            return parts.Remove(item);
         }
 
         /// <summary>
@@ -240,9 +241,9 @@ namespace Mini
         #endregion
 
         #region Properties
-        /// <value>
+        /// <summary>
         /// Get or set a section's comment.
-        /// </value>
+        /// </summary>
         public string Comment
         {
             get;
@@ -271,9 +272,9 @@ namespace Mini
             }
         }
 
-        /// <value>
+        /// <summary>
         /// Get or set a section's name.
-        /// </value>
+        /// </summary>
         public string Name
         {
             get;

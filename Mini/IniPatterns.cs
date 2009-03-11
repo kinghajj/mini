@@ -50,10 +50,10 @@ namespace Mini
     }
 
     /// <summary>
-    /// Finds and matches patterns of INI files.
+    /// Finds and matches patterns of INI documents.
     /// </summary>
     /// <remarks>
-    /// This class uses regular expressions to break up lines of an INI file
+    /// This class uses regular expressions to break up lines of an INI document
     /// into their important parts, in effect tokenizing them for the parser.
     /// </remarks>
     internal class IniPatterns : IEnumerable<IniPattern>
@@ -161,7 +161,7 @@ namespace Mini
 
         #region Enumerator
         /// <summary>
-        /// Gets an iterator for the file's sections.
+        /// Gets an iterator for the document's sections.
         /// </summary>
         /// <returns>
         /// An enumerator of patterns processed from the input stream.

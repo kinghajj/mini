@@ -40,7 +40,7 @@ namespace Mini.Test
             ini["RemoveThisToo"].Comment = "This better not stay!";
             ini.Remove("RemoveThisToo");
             ini["User"].Comment = "These are the basic user settings.\nDon't modify them unless you know what you're doing.";
-            ini.SaveAs("test2.ini");
+            ini.Write("test2.ini");
 
             watch.Stop();
             var endMem = GC.GetTotalMemory(false);

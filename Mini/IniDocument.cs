@@ -25,7 +25,7 @@ using System.Text;
 namespace Mini
 {
     /// <summary>
-    /// Represents an INI file.
+    /// Represents an INI document.
     /// </summary>
     /// <remarks>
     /// This is the core class of the library. It is the one and only entrypoint
@@ -37,7 +37,7 @@ namespace Mini
 
         #region Constructors
         /// <summary>
-        /// Creates a new, blank INI file.
+        /// Creates a new, blank INI document.
         /// </summary>
         public IniDocument()
         {
@@ -47,10 +47,10 @@ namespace Mini
         }
 
         /// <summary>
-        /// Opens an INI file from a stream.
+        /// Opens an INI document from a stream.
         /// </summary>
         /// <param name="stream">
-        /// The stream from which to read the INI file.
+        /// The stream from which to read the INI document.
         /// This stream will be closed before this method completes.
         /// </param>
         public IniDocument(TextReader stream)
@@ -61,13 +61,13 @@ namespace Mini
         }
 
         /// <summary>
-        /// Opens an INI file from a path with the given encoding.
+        /// Opens an INI document from a path with the given encoding.
         /// </summary>
         /// <param name="path">
-        /// The path to the INI file.
+        /// The path to the INI document.
         /// </param>
         /// <param name="encoding">
-        /// An encoding with which to interpret the INI file.
+        /// An encoding with which to interpret the INI document.
         /// </param>
         public IniDocument(string path, Encoding encoding)
             : this(new StreamReader(path, encoding))
@@ -77,10 +77,10 @@ namespace Mini
         }
 
         /// <summary>
-        /// Opens an INI file from a path with the default encoding.
+        /// Opens an INI document from a path with the default encoding.
         /// </summary>
         /// <param name="path">
-        /// The path to the INI file.
+        /// The path to the INI document.
         /// </param>
         public IniDocument(string path)
             : this(path, Encoding.Default)
@@ -102,7 +102,7 @@ namespace Mini
         }
 
         /// <summary>
-        /// Removes a section from the INI file.
+        /// Removes a section from the INI document.
         /// </summary>
         /// <param name="section">The section to remove.</param>
         public void Remove(IniSection section)
@@ -120,20 +120,23 @@ namespace Mini
         }
 
         /// <summary>
-        /// Saves the file using its path.
+        /// Saves the document using its stored path.
         /// </summary>
-        public void Save()
+        /// <exception cref="T:System.InvalidOperationException">
+        /// Throw when Path is null or empty.
+        /// </exception>
+        public void Write()
         {
-            SaveAs(Path);
+            if(string.IsNullOrEmpty(Path))
+                throw new InvalidOperationException("Path is null or empty.");
+            Write(Path);
         }
 
         /// <summary>
-        /// Saves the file using the given path.
+        /// Saves the document using the given path.
         /// </summary>
-        /// <param name="path">
-        /// The path into which to save the file.
-        /// </param>
-        public void SaveAs(string path)
+        /// <param name="path">The path to save the document to.</param>
+        public void Write(string path)
         {
             using(var writer = new StreamWriter(path, false, Encoding))
                 Write(writer);
@@ -171,7 +174,7 @@ namespace Mini
         }
 
         /// <summary>
-        /// Parses an input stream into as an INI file.
+        /// Parses an input stream into as an INI document.
         /// </summary>
         /// <param name="stream">The stream to parse.</param>
         private void Parse(TextReader stream)
@@ -247,10 +250,10 @@ namespace Mini
 
         #region Enumerator
         /// <summary>
-        /// Gets an iterator for the file's sections.
+        /// Gets an iterator for the document's sections.
         /// </summary>
         /// <returns>
-        /// An enumerator of sections of the INI file.
+        /// An enumerator of sections of the INI document.
         /// </returns>
         public IEnumerator<IniSection> GetEnumerator()
         {
@@ -271,7 +274,7 @@ namespace Mini
 
         #region Indexers
         /// <summary>
-        /// Gets a file's section via its name.
+        /// Gets a document's section via its name.
         /// </summary>
         /// <remarks>
         /// If a section with the given name does not exist, it will be created
@@ -295,7 +298,7 @@ namespace Mini
         }
 
         /// <summary>
-        /// Gets a file's part via its index.
+        /// Gets a document's part via its index.
         /// </summary>
         public IniPart this[int index]
         {
@@ -310,11 +313,32 @@ namespace Mini
         /// <summary>
         /// Gets or sets the INI's encoding.
         /// </summary>
-        public Encoding Encoding { get; set; }
-        /// <value>
-        /// Get an INI file's path.
-        /// </value>
-        public string Path { get; set; }
+        public Encoding Encoding
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Get an INI document's path.
+        /// </summary>
+        public string Path
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets an enumeration of the document's parts.
+        /// </summary>
+        public IEnumerable<IniPart> Parts
+        {
+            get
+            {
+                return parts;
+            }
+        }
+
         #endregion
     }
 }

@@ -22,7 +22,7 @@ using System.IO;
 namespace Mini
 {
     /// <summary>
-    /// Represents a comment in an INI file.
+    /// Represents a comment in an INI document.
     /// </summary>
     /// <remarks>
     /// Usually, these objects are only created for "lone" comments, because
@@ -43,6 +43,7 @@ namespace Mini
         #endregion
 
         #region Methods
+        #region Internal
         /// <summary>
         /// Writes the comment to an output stream.
         /// </summary>
@@ -81,6 +82,7 @@ namespace Mini
             if(endWithNewline)
                 writer.WriteLine();
         }
+        #endregion
         #endregion
 
         #region Properties

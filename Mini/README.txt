@@ -32,11 +32,11 @@ have all the features I required, and hasn't been updated for some time.
 
 2. How Mini Works
 
-Mini is pretty simple. When you load an INI file, it's parsed into an internal
-structure. You can then change that structure programatically, then save that
-structure back to a file.
+Mini is pretty simple. When you load an INI document, it's parsed into an
+internal structure. You can then change that structure programatically, then
+save that structure back to a file.
 
-Parsing an INI file is rather simple. There are only three parts: comments,
+Parsing an INI document is rather simple. There are only three parts: comments,
 section headers, and settings. Settings are associated with the most recently
 seen section header, and comments may stand alone or be associated with a
 section header or setting. A comment will be associated with a section header
@@ -78,4 +78,4 @@ Using Mini is very straightforward.
 
     var ini = new IniDocument("test.ini");
     ini["Section"]["Setting"].Value = "Foo";
-    ini.Save();
+    ini.Write();
