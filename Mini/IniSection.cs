@@ -74,7 +74,6 @@ namespace Mini
         /// </summary>
         /// <param name="find">The setting to locate in the section.</param>
         /// <returns>true if the setting is found; otherwise false.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId = "0#")]
         public bool Contains(IniSetting item)
         {
             foreach(var setting in this)
