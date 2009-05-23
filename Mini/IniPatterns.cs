@@ -217,8 +217,8 @@ namespace Mini
              * equal sign, then any number of spaces...
              */
             new Regex(@"^\s*(?<name>\w+)\s*=\s*" +
-            /* ...then any number of non-semicolon characters, which are the
-             * value, then by any number of spaces.
+            /* ...then any number of characters, which are the value, then by
+             * any number of spaces.
              */
             @"(?<value>.*)\s*$");
         #endregion
