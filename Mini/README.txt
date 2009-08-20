@@ -1,4 +1,4 @@
-﻿Mini, an INI library for the .NET framework.
+Mini, an INI library for the .NET framework.
 
 Mini is free software: you can redistribute it and/or modify it under the
 terms of the GNU Lesser General Public License as published by the Free
@@ -79,3 +79,21 @@ Using Mini is very straightforward.
     var ini = new IniDocument("test.ini");
     ini["Section"]["Setting"].Value = "Foo";
     ini.Write();
+
+================================================================================
+
+4. How does it perform?
+
+On my computer, Mini can read and parse an INI document at about 5 MiB/s, and
+can write an in-memory INI document back to a file at about 20 MiB/s. The test
+program, which opens a file, changes it slightly, and then writes it back to
+a second file, runs at about 4 MiB/s. These results were calculated with a real-
+world, half-mebibyte INI file. This file contains hundreds of sections, each
+with dozens of settings and comments, so I consider it a fair measure of Mini's
+parsing speed.
+
+================================================================================
+
+5. What does "Mini" mean?
+
+Maybe "Mini: INI .NET Interface"?

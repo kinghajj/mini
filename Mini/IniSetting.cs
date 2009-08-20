@@ -66,7 +66,8 @@ namespace Mini
         public override bool Equals(object obj)
         {
             var other = obj as IniSection;
-            return other == null ? false : Equals(other);
+            return Object.ReferenceEquals(this, obj) ||
+                (other == null ? false : Equals(other));
         }
 
         /// <summary>
