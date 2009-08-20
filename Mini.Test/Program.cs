@@ -29,25 +29,39 @@ namespace Mini.Test
         static void Main(string[] args)
         {
             var watch = new Stopwatch();
-            var startMem = GC.GetTotalMemory(false);
+
+            // Time how long it takes to process the INI, and estimate how much
+            // memory the data structure takes.
             watch.Start();
-
+            var startMem = GC.GetTotalMemory(false);
             var ini = new IniDocument("test.ini");
-            ini["User"]["Name"].Value = "md5sum";
-            ini["User"]["PasswordHash"].Value = "e65b0dce58cbecf21e7c9ff7318f3b57";
-            ini["User"]["RemoveThis"].Value = "This shouldn'd stay.";
-            ini["User"].Remove("RemoveThis");
-            ini["RemoveThisToo"].Comment = "This better not stay!";
-            ini.Remove("RemoveThisToo");
-            ini["User"].Comment = "These are the basic user settings.\nDon't modify them unless you know what you're doing.";
-            ini.Write("test2.ini");
-
-            watch.Stop();
             var endMem = GC.GetTotalMemory(false);
-            Console.WriteLine("{0} Ticks", watch.ElapsedTicks);
-            Console.WriteLine("{0} Milliseconds", watch.ElapsedMilliseconds);
-            Console.WriteLine("Mem Start: {0}", startMem);
-            Console.WriteLine("    End:   {0}", endMem);
+            Console.WriteLine("Approx. Data Structure Mem: {0}", endMem - startMem);
+            watch.Stop();
+            Console.WriteLine("{0} ms to process INI.", watch.ElapsedMilliseconds);
+            watch.Reset();
+
+            // Time how long it takes to make many simple changes.
+            watch.Start();
+            for(int i = 0; i < 1000; ++i)
+            {
+                ini["User"]["Name"].Value = "md5sum";
+                ini["User"]["PasswordHash"].Value = "e65b0dce58cbecf21e7c9ff7318f3b57";
+                ini["User"]["RemoveThis"].Value = "This shouldn'd stay.";
+                ini["User"].Remove("RemoveThis");
+                ini["RemoveThisToo"].Comment = "This better not stay!";
+                ini.Remove("RemoveThisToo");
+                ini["User"].Comment = "These are the basic user settings.\nDon't modify them unless you know what you're doing.";
+            }
+            watch.Stop();
+            Console.WriteLine("{0} ms to make changes.", watch.ElapsedMilliseconds);
+            watch.Reset();
+
+            // Time how long it takes to write the changes back to another file.
+            watch.Start();
+            ini.Write("test2.ini");
+            watch.Stop();
+            Console.WriteLine("{0} ms write INI document to file.", watch.ElapsedMilliseconds);
         }
     }
 }

@@ -92,6 +92,11 @@ world, half-mebibyte INI file. This file contains hundreds of sections, each
 with dozens of settings and comments, so I consider it a fair measure of Mini's
 parsing speed.
 
+The test program also tests how fast common operations like looking up a section
+or setting by name are by repeating the same seven operations 1000 times. This
+takes about 100 milliseconds on my machine, which translates to 70,000
+operations per second.
+
 ================================================================================
 
 5. What does "Mini" mean?
