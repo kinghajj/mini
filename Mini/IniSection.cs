@@ -196,6 +196,10 @@ namespace Mini
             }
         }
 
+        /// <summary>
+        /// A silly required function.
+        /// </summary>
+        /// <returns>An enumerator of IniSettings.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

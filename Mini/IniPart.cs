@@ -16,7 +16,6 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
 using System.IO;
 
 namespace Mini
@@ -31,6 +30,10 @@ namespace Mini
     /// </remarks>
     public abstract class IniPart
     {
+        /// <summary>
+        /// Writes this part of an INI document to an output stream.
+        /// </summary>
+        /// <param name="writer">The stream to write to.</param>
         abstract internal void Write(TextWriter writer);
     }
 }

@@ -36,16 +36,28 @@ namespace Mini
     }
 
     /// <summary>
-    /// Contains information on a parsed INI pattern.
+    /// Contains information on a INI pattern.
     /// </summary>
     internal class IniPattern
     {
+        /// <summary>
+        /// Gets or sets the comment of an INI pattern.
+        /// </summary>
         internal string Comment { get; set; }
 
+        /// <summary>
+        /// Gets or sets the kind of an INI pattern.
+        /// </summary>
         internal IniPatternKind Kind { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of an INI pattern.
+        /// </summary>
         internal string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the value of an INI pattern.
+        /// </summary>
         internal string Value { get; set; }
     }
 
@@ -62,6 +74,11 @@ namespace Mini
         private TextReader stream;
 
         #region Constructors
+        /// <summary>
+        /// Creates an IniPatterns reader to match patterns found in the given
+        /// stream.
+        /// </summary>
+        /// <param name="input">The stream to read patterns from.</param>
         public IniPatterns(TextReader input)
         {
             stream = input;
@@ -161,7 +178,7 @@ namespace Mini
 
         #region Enumerator
         /// <summary>
-        /// Gets an iterator for the document's sections.
+        /// Gets an enumerator for the document's sections.
         /// </summary>
         /// <returns>
         /// An enumerator of patterns processed from the input stream.
