@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>kinghajj/mini @ GitHub</title>
+	
+	<style type="text/css">
+		body {
+  		margin-top: 1.0em;
+  		background-color: #5a335d;
+		  font-family: "Helvetica,Arial,FreeSans"; 
+  		color: #ffffff;
+    }
+    #container {
+      margin: 0 auto;
+      width: 700px;
+    }
+		h1 { font-size: 3.8em; color: #a5cca2; margin-bottom: 3px; }
+		h1 .small { font-size: 0.4em; }
+		h1 a { text-decoration: none }
+		h2 { font-size: 1.5em; color: #a5cca2; }
+    h3 { text-align: center; color: #a5cca2; }
+    a { color: #a5cca2; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .download { float: right; }
+		pre { background: #000; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+	</style>
+	
+</head>
+
+<body>
+  <a href="http://github.com/kinghajj/mini"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+  <div id="container">
+
+    <div class="download">
+      <a href="http://github.com/kinghajj/mini/zipball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+      <a href="http://github.com/kinghajj/mini/tarball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+    </div>
+      
+    <h1><a href="http://github.com/kinghajj/mini">mini</a> 
+      <span class="small">by <a href="http://github.com/kinghajj">kinghajj</a></span></h1>
+
+    <div class="description">
+      A .NET library for reading, modifying, and writing INI files.
+    </div>
+
+    <p>Mini, an INI library for the .NET framework.
+ 
+Mini is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free
+Software Foundation, either version 2.1 of the License, or (at your option)
+any later version.
+ 
+Mini is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+details.
+ 
+You should have received a copy of the GNU Lesser General Public License
+along with Mini. If not, see <http://www.gnu.org/licenses/>.
+ 
+================================================================================
+ 
+1. About Mini
+ 
+Mini is an INI library for the .NET framework. It aims to be small and easy-to-
+use while providing functionality lacking in other INI libraries. Specifically,
+Mini associates comments with sections or settings if they're adjoined. This is
+so that you can put useful comments in the INI, then display those comments in
+another program, such as a configuration program; in such a case, the comments
+could be used to explain different possible settings to the user.
+ 
+I started writing Mini because I thought it could be useful to use at my work.
+I tried using Nini, another INI library for the .NET framework, but it didn't
+have all the features I required, and hasn't been updated for some time.
+ 
+================================================================================
+ 
+2. How Mini Works
+ 
+Mini is pretty simple. When you load an INI document, it's parsed into an
+internal structure. You can then change that structure programatically, then
+save that structure back to a file.
+ 
+Parsing an INI document is rather simple. There are only three parts: comments,
+section headers, and settings. Settings are associated with the most recently
+seen section header, and comments may stand alone or be associated with a
+section header or setting. A comment will be associated with a section header
+or setting if it appears on the same line or on the lines immediately before
+them. Additionally, adjacent comments are assumed to be one, multi-line comment.
+ 
+Here's a simple example of how this works.
+ 
+    ; This comment is all by itself--it's not associated with anything.
+    
+    
+    ; This comment is associated with the following section.
+    ; This is a continuation of the previous comment.
+    [Foo] ; Yet another comment on this section!
+    ; This comment is associated with the following setting.
+    Bar = Baz
+ 
+If this gets parsed then re-written unchanged, the file will look like this.
+ 
+    ; This comment is all by itself--it's not associated with anything.
+    
+    ; This comment is associated with the following section.
+    ; This is a continuation of the previous comment.
+    ; Yet another comment on this section!
+    [Foo]
+    ; This comment is associated with the following setting.
+    Bar = Baz
+ 
+As you can see, whether a comment appeared on the same line or the previous
+lines is not stored, so when re-written, all comments are put before whatever
+they are associated with. You can also see that extraneous newlines are not
+kept.
+ 
+================================================================================
+ 
+3. How to Use Mini
+ 
+Using Mini is very straightforward.
+ 
+    var ini = new IniDocument("test.ini");
+    ini["Section"]["Setting"].Value = "Foo";
+    ini.Write();
+ 
+================================================================================
+ 
+4. How does it perform?
+ 
+On my computer, Mini can read and parse an INI document at about 5 MiB/s, and
+can write an in-memory INI document back to a file at about 20 MiB/s. The test
+program, which opens a file, changes it slightly, and then writes it back to
+a second file, runs at about 4 MiB/s. These results were calculated with a real-
+world, half-mebibyte INI file. This file contains hundreds of sections, each
+with dozens of settings and comments, so I consider it a fair measure of Mini's
+parsing speed.
+ 
+The test program also tests how fast common operations like looking up a section
+or setting by name are by repeating the same seven operations 1000 times. This
+takes about 100 milliseconds on my machine, which translates to 70,000
+operations per second.
+ 
+================================================================================
+ 
+5. What does "Mini" mean?
+ 
+Maybe "Mini: INI .NET Interface"?</p><h2>Dependencies</h2>
+<p>.NET 3.5</p>
+<h2>License</h2>
+<p>LGPL 2.1</p>
+<h2>Authors</h2>
+<p>Sam Fredrickson (kinghajj@gmail.com)<br/><br/>      </p>
+<h2>Contact</h2>
+<p> (kinghajj@gmail.com)<br/>      </p>
+
+
+    <h2>Download</h2>
+    <p>
+      You can download this project in either
+      <a href="http://github.com/kinghajj/mini/zipball/master">zip</a> or
+      <a href="http://github.com/kinghajj/mini/tarball/master">tar</a> formats.
+    </p>
+    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+      by running:
+      <pre>$ git clone git://github.com/kinghajj/mini</pre>
+    </p>
+      
+    <div class="footer">
+      get the source code on GitHub : <a href="http://github.com/kinghajj/mini">kinghajj/mini</a>
+    </div>
+    
+  </div>
+
+  
+</body>
+</html>
