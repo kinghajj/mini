@@ -174,6 +174,7 @@ namespace Mini
             string comment = string.Empty;
             IniSection section = null;
             IniSetting setting = null;
+            int newlines = 0;
 
             foreach(var pattern in new IniPatterns(stream))
             {
@@ -191,6 +192,8 @@ namespace Mini
                         section.Comment = JoinComments(section.Comment,
                                                        comment,
                                                        pattern.Comment);
+                        section.Newlines = newlines;
+                        newlines = 0;
                         comment = string.Empty;
                         break;
                     case IniPatternKind.Setting:
@@ -204,6 +207,8 @@ namespace Mini
                                                            comment,
                                                            pattern.Comment);
                             setting.Value = pattern.Value;
+                            setting.Newlines = newlines;
+                            newlines = 0;
                             // Erase the old built-up comment.
                             comment = string.Empty;
                         }
@@ -213,12 +218,15 @@ namespace Mini
                         if(!string.IsNullOrEmpty(comment))
                         {
                             var new_comment = new IniComment(comment);
+                            new_comment.Newlines = newlines;
                             if(section != null)
                                 section.AddPart(new_comment);
                             else
                                 parts.Add(new_comment);
                             comment = string.Empty;
+                            newlines = 0;
                         }
+                        newlines++;
                         break;
                 }
             }

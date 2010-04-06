@@ -31,9 +31,25 @@ namespace Mini
     public abstract class IniPart
     {
         /// <summary>
+        /// Writes the necessary number of newlines to the text writer.
+        /// </summary>
+        /// <param name="writer"></param>
+        protected static void WriteNewlines(TextWriter writer, int newlines)
+        {
+            //System.Console.WriteLine("Writing {0} newlines.", newlines);
+            for(int i = 0; i < newlines; ++i)
+                writer.WriteLine();
+        }
+
+        /// <summary>
         /// Writes this part of an INI document to an output stream.
         /// </summary>
         /// <param name="writer">The stream to write to.</param>
         abstract internal void Write(TextWriter writer);
+
+        /// <summary>
+        /// The number of newlines that occur before the part.
+        /// </summary>
+        internal int Newlines { get; set; }
     }
 }

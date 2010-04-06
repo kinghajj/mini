@@ -50,7 +50,7 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         override internal void Write(TextWriter writer)
         {
-            Write(writer, true);
+            Write(writer, false);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Mini
         /// comment.</param>
         internal void Write(TextWriter writer, bool endWithNewline)
         {
-            Write(Comment, writer, endWithNewline);
+            Write(Comment, writer, endWithNewline, Newlines);
         }
 
         /// <summary>
@@ -73,8 +73,22 @@ namespace Mini
         /// comment.</param>
         internal static void Write(string comment, TextWriter writer, bool endWithNewline)
         {
+            Write(comment, writer, endWithNewline, 0);
+        }
+
+        /// <summary>
+        /// Writes a string comment to an output stream.
+        /// </summary>
+        /// <param name="comment">The comment to write.</param>
+        /// <param name="writer">The stream to write to.</param>
+        /// <param name="endWithNewline">Whether to write a newline after the
+        /// comment.</param>
+        /// <param name="newlines">How many newlines to write before the comment.</param>
+        internal static void Write(string comment, TextWriter writer, bool endWithNewline, int newlines)
+        {
             var newline = Environment.NewLine.ToCharArray();
 
+            WriteNewlines(writer, newlines);
             if(!String.IsNullOrEmpty(comment))
                 foreach(var c in comment.Split(newline, StringSplitOptions.RemoveEmptyEntries))
                     writer.WriteLine("; {0}", c);

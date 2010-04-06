@@ -153,11 +153,11 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         override internal void Write(TextWriter writer)
         {
+            WriteNewlines(writer, Newlines);
             IniComment.Write(Comment, writer, false);
             writer.WriteLine("[{0}]", Name);
             foreach(var part in parts)
                 part.Write(writer);
-            writer.WriteLine();
         }
         #endregion
 
