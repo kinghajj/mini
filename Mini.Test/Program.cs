@@ -46,11 +46,11 @@ namespace Mini.Test
             for(int i = 0; i < 1000; ++i)
             {
                 ini["User"]["Name"].Value = "md5sum";
-                ini["User"]["PasswordHash"].Value = "e65b0dce58cbecf21e7c9ff7318f3b57";
-                ini["User"]["RemoveThis"].Value = "This shouldn'd stay.";
-                ini["User"].Remove("RemoveThis");
-                ini["RemoveThisToo"].Comment = "This better not stay!";
-                ini.Remove("RemoveThisToo");
+                ini["User"]["Password Hash"].Value = "e65b0dce58cbecf21e7c9ff7318f3b57";
+                ini["User"]["Remove This"].Value = "This shouldn'd stay.";
+                ini["User"].Remove("Remove This");
+                ini["Remove This Too"].Comment = "This better not stay!";
+                ini.Remove("Remove This Too");
                 ini["User"].Comment = "These are the basic user settings.\nDon't modify them unless you know what you're doing.";
             }
             watch.Stop();
