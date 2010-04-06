@@ -29,14 +29,14 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Mini")]
-[assembly: AssemblyCopyright("(C) 2009 Samuel Fredrickson")]
+[assembly: AssemblyCopyright("(C) 2010 Samuel Fredrickson")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // The assembly version has the format "{Major}.{Minor}.{Build}.{Revision}".
 // If the build and revision are set to '*' they will be updated automatically.
 
-[assembly: AssemblyVersion("0.1.3.0")]
+[assembly: AssemblyVersion("0.1.3.2")]
 
 // The following attributes are used to specify the signing key for the
 // assembly, if desired. See the Mono documentation for more information about
