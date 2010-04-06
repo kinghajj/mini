@@ -37,6 +37,7 @@ namespace Mini
         /// </summary>
         /// <param name="comment">The text to use as a comment.</param>
         internal IniComment(string comment)
+            : base(1)
         {
             Comment = comment;
         }

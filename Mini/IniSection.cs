@@ -44,6 +44,7 @@ namespace Mini
         /// The document to which the section belongs.
         /// </param>
         internal IniSection(string name, string comment)
+            : base(1)
         {
             parts = new List<IniPart>();
             Comment = comment;

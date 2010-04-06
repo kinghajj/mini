@@ -40,6 +40,7 @@ namespace Mini
         /// The section to which the setting belongs.
         /// </param>
         internal IniSetting(string key, string value)
+            : base(0)
         {
             Comment = string.Empty;
             Key = key;

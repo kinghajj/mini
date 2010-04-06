@@ -42,6 +42,16 @@ namespace Mini
         }
 
         /// <summary>
+        /// The most abstract constructor for all INI parts.
+        /// </summary>
+        /// <param name="newlines">How many newlines should occur before the part.</param>
+        internal IniPart(int newlines)
+        {
+            // Assume that there should be a newline
+            Newlines = newlines;
+        }
+
+        /// <summary>
         /// Writes this part of an INI document to an output stream.
         /// </summary>
         /// <param name="writer">The stream to write to.</param>
