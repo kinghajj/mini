@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
