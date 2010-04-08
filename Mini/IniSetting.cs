@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -40,6 +40,7 @@ namespace Mini
         /// The section to which the setting belongs.
         /// </param>
         internal IniSetting(string key, string value)
+            : base(0)
         {
             Comment = string.Empty;
             Key = key;
@@ -115,6 +116,7 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         override internal void Write(TextWriter writer)
         {
+            WriteNewLines(writer, NewLines);
             IniComment.Write(Comment, writer, false);
             writer.WriteLine("{0}={1}", Key, Value);
         }

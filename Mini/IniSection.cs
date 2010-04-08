@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -44,6 +44,7 @@ namespace Mini
         /// The document to which the section belongs.
         /// </param>
         internal IniSection(string name, string comment)
+            : base(1)
         {
             parts = new List<IniPart>();
             Comment = comment;
@@ -153,11 +154,11 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         override internal void Write(TextWriter writer)
         {
+            WriteNewLines(writer, NewLines);
             IniComment.Write(Comment, writer, false);
             writer.WriteLine("[{0}]", Name);
             foreach(var part in parts)
                 part.Write(writer);
-            writer.WriteLine();
         }
         #endregion
 

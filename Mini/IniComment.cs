@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -37,6 +37,7 @@ namespace Mini
         /// </summary>
         /// <param name="comment">The text to use as a comment.</param>
         internal IniComment(string comment)
+            : base(1)
         {
             Comment = comment;
         }
@@ -50,7 +51,7 @@ namespace Mini
         /// <param name="writer">The stream to write to.</param>
         override internal void Write(TextWriter writer)
         {
-            Write(writer, true);
+            Write(writer, false);
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace Mini
         /// comment.</param>
         internal void Write(TextWriter writer, bool endWithNewline)
         {
-            Write(Comment, writer, endWithNewline);
+            Write(Comment, writer, endWithNewline, NewLines);
         }
 
         /// <summary>
@@ -73,8 +74,22 @@ namespace Mini
         /// comment.</param>
         internal static void Write(string comment, TextWriter writer, bool endWithNewline)
         {
+            Write(comment, writer, endWithNewline, 0);
+        }
+
+        /// <summary>
+        /// Writes a string comment to an output stream.
+        /// </summary>
+        /// <param name="comment">The comment to write.</param>
+        /// <param name="writer">The stream to write to.</param>
+        /// <param name="endWithNewline">Whether to write a newline after the
+        /// comment.</param>
+        /// <param name="newlines">How many newlines to write before the comment.</param>
+        internal static void Write(string comment, TextWriter writer, bool endWithNewline, int newlines)
+        {
             var newline = Environment.NewLine.ToCharArray();
 
+            WriteNewLines(writer, newlines);
             if(!String.IsNullOrEmpty(comment))
                 foreach(var c in comment.Split(newline, StringSplitOptions.RemoveEmptyEntries))
                     writer.WriteLine("; {0}", c);
