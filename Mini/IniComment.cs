@@ -62,7 +62,7 @@ namespace Mini
         /// comment.</param>
         internal void Write(TextWriter writer, bool endWithNewline)
         {
-            Write(Comment, writer, endWithNewline, Newlines);
+            Write(Comment, writer, endWithNewline, NewLines);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Mini
         {
             var newline = Environment.NewLine.ToCharArray();
 
-            WriteNewlines(writer, newlines);
+            WriteNewLines(writer, newlines);
             if(!String.IsNullOrEmpty(comment))
                 foreach(var c in comment.Split(newline, StringSplitOptions.RemoveEmptyEntries))
                     writer.WriteLine("; {0}", c);

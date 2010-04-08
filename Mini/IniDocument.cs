@@ -192,7 +192,7 @@ namespace Mini
                         section.Comment = JoinComments(section.Comment,
                                                        comment,
                                                        pattern.Comment);
-                        section.Newlines = newlines;
+                        section.NewLines = newlines;
                         newlines = 0;
                         comment = string.Empty;
                         break;
@@ -207,7 +207,7 @@ namespace Mini
                                                            comment,
                                                            pattern.Comment);
                             setting.Value = pattern.Value;
-                            setting.Newlines = newlines;
+                            setting.NewLines = newlines;
                             newlines = 0;
                             // Erase the old built-up comment.
                             comment = string.Empty;
@@ -218,7 +218,7 @@ namespace Mini
                         if(!string.IsNullOrEmpty(comment))
                         {
                             var new_comment = new IniComment(comment);
-                            new_comment.Newlines = newlines;
+                            new_comment.NewLines = newlines;
                             if(section != null)
                                 section.AddPart(new_comment);
                             else
