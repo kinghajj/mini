@@ -32,12 +32,12 @@ namespace Mini.Test
 
             // Time how long it takes to process the INI, and estimate how much
             // memory the data structure takes.
-            watch.Start();
             var startMem = GC.GetTotalMemory(false);
+            watch.Start();
             var ini = new IniDocument("test.ini");
+            watch.Stop();
             var endMem = GC.GetTotalMemory(false);
             Console.WriteLine("Approx. Data Structure Mem: {0}", endMem - startMem);
-            watch.Stop();
             Console.WriteLine("{0} ms to process INI.", watch.ElapsedMilliseconds);
             watch.Reset();
 
