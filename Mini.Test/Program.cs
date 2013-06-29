@@ -1,4 +1,4 @@
-﻿/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
+﻿/* Copyright (C) 2013 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -26,7 +26,7 @@ namespace Mini.Test
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var watch = new Stopwatch();
 

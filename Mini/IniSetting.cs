@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2013 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -33,11 +33,8 @@ namespace Mini
         /// <param name="key">
         /// The setting's key.
         /// </param>
-        /// <param name="_value">
+        /// <param name="value">
         /// The setting's value.
-        /// </param>
-        /// <param name="section">
-        /// The section to which the setting belongs.
         /// </param>
         internal IniSetting(string key, string value)
             : base(0)
@@ -67,8 +64,8 @@ namespace Mini
         public override bool Equals(object obj)
         {
             var other = obj as IniSection;
-            return Object.ReferenceEquals(this, obj) ||
-                (other == null ? false : Equals(other));
+            return ReferenceEquals(this, obj) ||
+                (other != null && Equals(other));
         }
 
         /// <summary>
@@ -88,9 +85,9 @@ namespace Mini
         /// <returns>true if they are equal, else false.</returns>
         public static bool operator ==(IniSetting a, IniSetting b)
         {
-            if(object.ReferenceEquals(a, null) ||
-               object.ReferenceEquals(b, null))
-                return object.ReferenceEquals(a, null) && object.ReferenceEquals(b, null);
+            if(ReferenceEquals(a, null) ||
+               ReferenceEquals(b, null))
+                return ReferenceEquals(a, null) && ReferenceEquals(b, null);
 
             return a.Equals(b);
         }
@@ -103,9 +100,9 @@ namespace Mini
         /// <returns>true if they are not equal, else false.</returns>
         public static bool operator !=(IniSetting a, IniSetting b)
         {
-            if(object.ReferenceEquals(a, null) ||
-               object.ReferenceEquals(b, null))
-                return !(object.ReferenceEquals(a, null) && object.ReferenceEquals(b, null));
+            if(ReferenceEquals(a, null) ||
+               ReferenceEquals(b, null))
+                return !(ReferenceEquals(a, null) && ReferenceEquals(b, null));
 
             return !a.Equals(b);
         }

@@ -1,5 +1,5 @@
-/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
- * 
+/* Copyright (C) 2013 Samuel Fredrickson <kinghajj@gmail.com>
+ *
  * This file is part of Mini, an INI library for the .NET framework.
  *
  * Mini is free software: you can redistribute it and/or modify it under the
@@ -20,7 +20,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Mini
@@ -34,6 +33,7 @@ namespace Mini
         Section,
         Setting,
         None,
+        Eof,
     }
 
     /// <summary>
@@ -71,8 +71,8 @@ namespace Mini
     /// </remarks>
     internal class IniPatterns : IEnumerable<IniPattern>
     {
-        private Match last_match;
-        private TextReader stream;
+        private Match _lastMatch;
+        private readonly TextReader _stream;
 
         #region Constructors
         /// <summary>
@@ -82,7 +82,7 @@ namespace Mini
         /// <param name="input">The stream to read patterns from.</param>
         public IniPatterns(TextReader input)
         {
-            stream = input;
+            _stream = input;
         }
         #endregion
 
@@ -100,21 +100,21 @@ namespace Mini
 
             // Read a line from the stream and try to match it with a pattern.
             // If the match was successful,
-            if( (kind = MatchWithPattern(stream.ReadLine())) != IniPatternKind.None)
+            if( (kind = MatchWithPattern(_stream.ReadLine())) != IniPatternKind.None)
             {
                 Group group;
                 // If the match produced a comment, save it.
-                if((group = last_match.Groups["comment"]) != null)
+                if((group = _lastMatch.Groups["comment"]) != null)
                     comment = group.Value;
                 // If the match produced a name, save it.
-                if((group = last_match.Groups["name"]) != null)
+                if((group = _lastMatch.Groups["name"]) != null)
                     name = group.Value;
                 // If the match produced a value, save it.
-                if((group = last_match.Groups["value"]) != null)
+                if((group = _lastMatch.Groups["value"]) != null)
                     value = group.Value;
             }
 
-            return new IniPattern()
+            return new IniPattern
             {
                 Comment = comment,
                 Kind    = kind,
@@ -123,34 +123,46 @@ namespace Mini
             };
         }
 
+        private readonly IniPatternKind[] _kindsWithPatterns =
+        {
+            IniPatternKind.Comment,
+            IniPatternKind.Section,
+            IniPatternKind.Setting,
+        };
+
         /// <summary>
         /// Returns the kind of pattern that matches the input.
         /// </summary>
         private IniPatternKind MatchWithPattern(string input)
         {
-            var found_kind = IniPatternKind.None;
-            Regex pattern;
-            Match match;
+            var foundKind = IniPatternKind.None;
 
-            // Try to match the input against all know INI kinds.
-            foreach(IniPatternKind kind in
-                    Enum.GetValues(typeof(IniPatternKind)))
+            // Nothing left to do!
+            if (input == null)
+            {
+                return IniPatternKind.Eof;
+            }
+
+            // Try to match the input against all known INI kinds.
+            foreach (IniPatternKind kind in _kindsWithPatterns)
             {
                 // If there's no pattern for this kind, skip it.
-                if((pattern = GetPattern(kind)) == null)
+                Regex pattern;
+                if ((pattern = GetPattern(kind)) == null)
                     continue;
 
                 // If this pattern doesn't match the input, skip it.
-                if(!(match = pattern.Match(input)).Success)
+                Match match;
+                if (!(match = pattern.Match(input)).Success)
                     continue;
 
                 // If the match works, store it and break the loop.
-                found_kind = kind;
-                last_match = match;
+                foundKind = kind;
+                _lastMatch = match;
                 break;
             }
 
-            return found_kind;
+            return foundKind;
         }
 
         /// <summary>
@@ -163,13 +175,13 @@ namespace Mini
             switch(kind)
             {
                 case IniPatternKind.Comment:
-                    pattern = comment;
+                    pattern = Comment;
                     break;
                 case IniPatternKind.Section:
-                    pattern = section;
+                    pattern = Section;
                     break;
                 case IniPatternKind.Setting:
-                    pattern = setting;
+                    pattern = Setting;
                     break;
             }
 
@@ -186,21 +198,12 @@ namespace Mini
         /// </returns>
         public IEnumerator<IniPattern> GetEnumerator()
         {
-            IniPattern pattern = null;
-            bool run = true;
-
-            while(run)
+            while(true)
             {
-                try
-                {
-                    pattern = GetNextPattern();
-                }
-                catch(ArgumentNullException)
-                {
-                    run = false;
-                }
-                if(run)
-                    yield return pattern;
+                var pattern = GetNextPattern();
+                if (pattern.Kind == IniPatternKind.Eof)
+                    break;
+                yield return pattern;
             }
         }
 
@@ -219,17 +222,18 @@ namespace Mini
          * followed by a space, then any number of characters, which are the
          * comment, then the string ends.
          */
-        private static Regex comment =
-            new Regex(@"^\s*;+\s?(?<comment>.*)$");
+        private static readonly Regex Comment =
+            new Regex(@"^\s*;+\s?(?<comment>.*)$", RegexOptions.Compiled);
         /* Sections start with any number of spaces, then a [, then any number
          * of spaces, then one or more characters, which are the name, then any
          * number of spaces, then a ], then any number of spaces, then possibly
          * any number of semicolons, then possibly any number of characters,
          * which are the comment, then the string ends.
          */
-        private static Regex section =
-            new Regex(@"^\s*\[\s*(?<name>[\w\s\.]*\w)\s*\]\s*;*\s?(?<comment>.*)$");
-        private static Regex setting =
+        private static readonly Regex Section = new Regex(
+            @"^\s*\[\s*(?<name>[\w\s\.]*\w)\s*\]\s*;*\s?(?<comment>.*)$",
+            RegexOptions.Compiled);
+        private static readonly Regex Setting =
             /* Settings start with any number of spaces, then one or more word
              * characters, which are the name, then any number of spaces, an
              * equal sign, then any number of spaces...
@@ -238,7 +242,7 @@ namespace Mini
             /* ...then any number of characters, which are the value, then by
              * any number of spaces.
              */
-            @"(?<value>.*)\s*$");
+            @"(?<value>.*)\s*$", RegexOptions.Compiled);
         #endregion
     }
 }

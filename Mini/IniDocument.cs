@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2013 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -34,7 +34,7 @@ namespace Mini
     /// </remarks>
     public class IniDocument : IEnumerable<IniSection>
     {
-        private List<IniPart> parts;
+        private readonly OrderedDictionaryList<string, IniPart> _parts;
 
         #region Constructors
         /// <summary>
@@ -42,7 +42,7 @@ namespace Mini
         /// </summary>
         public IniDocument()
         {
-            parts    = new List<IniPart>();
+            _parts   = new OrderedDictionaryList<string, IniPart>();
             Path     = string.Empty;
             Encoding = Encoding.Default;
         }
@@ -99,7 +99,7 @@ namespace Mini
         /// <returns>true if the section found, else false.</returns>
         public bool HasSection(string name)
         {
-            return this.Any(section => section.Name == name);
+            return _parts.ContainsKey(name);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Mini
         /// <param name="section">The section to remove.</param>
         public void Remove(IniSection section)
         {
-            parts.Remove(section);
+            Remove(section.Name);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Mini
         /// <param name="sectionName">The name of the section to remove.</param>
         public void Remove(string sectionName)
         {
-            Remove(FindSection(sectionName));
+            _parts.Remove(sectionName);
         }
 
         /// <summary>
@@ -150,7 +150,8 @@ namespace Mini
         /// </param>
         public void Write(TextWriter writer)
         {
-            parts.ForEach(part => part.Write(writer));
+            foreach(var part in _parts.Values)
+                part.Write(writer);
         }
         #endregion
 
@@ -162,7 +163,9 @@ namespace Mini
         /// <returns>The found section or null.</returns>
         private IniSection FindSection(string name)
         {
-            return parts.OfType<IniSection>().FirstOrDefault(s => s.Name == name);
+            IniPart part;
+            _parts.TryGetValue(name, out part);
+            return part as IniSection;
         }
 
         /// <summary>
@@ -171,10 +174,9 @@ namespace Mini
         /// <param name="stream">The stream to parse.</param>
         private void Parse(TextReader stream)
         {
-            string comment = string.Empty;
+            var comment = string.Empty;
+            var newlines = 0;
             IniSection section = null;
-            IniSetting setting = null;
-            int newlines = 0;
 
             foreach(var pattern in new IniPatterns(stream))
             {
@@ -201,7 +203,7 @@ namespace Mini
                         if(section != null)
                         {
                             // Get this setting by its key.
-                            setting = section[pattern.Name];
+                            IniSetting setting = section[pattern.Name];
                             // Set its comment and value.
                             setting.Comment = JoinComments(setting.Comment,
                                                            comment,
@@ -217,12 +219,11 @@ namespace Mini
                         // If there's a stored comment, add it then clear it.
                         if(!string.IsNullOrEmpty(comment))
                         {
-                            var new_comment = new IniComment(comment);
-                            new_comment.NewLines = newlines;
+                            var newComment = new IniComment(comment) {NewLines = newlines};
                             if(section != null)
-                                section.AddPart(new_comment);
+                                section.AddPart(newComment);
                             else
-                                parts.Add(new_comment);
+                                _parts.AddUnkeyed(newComment);
                             comment = string.Empty;
                             newlines = 0;
                         }
@@ -243,7 +244,7 @@ namespace Mini
                                            string last)
         {
             return string.Join(Environment.NewLine,
-                               new string[] { previous, built, last });
+                               new[] { previous, built, last });
         }
         #endregion
         #endregion
@@ -257,7 +258,7 @@ namespace Mini
         /// </returns>
         public IEnumerator<IniSection> GetEnumerator()
         {
-            return parts.OfType<IniSection>().GetEnumerator();
+            return _parts.Values.OfType<IniSection>().GetEnumerator();
         }
 
         /// <summary>
@@ -286,20 +287,9 @@ namespace Mini
 
                 // if not, create it and add it.
                 if(found == null)
-                    parts.Add(found = new IniSection(name, string.Empty));
+                    _parts.Add(name, found = new IniSection(name, string.Empty));
 
                 return found;
-            }
-        }
-
-        /// <summary>
-        /// Gets a document's part via its index.
-        /// </summary>
-        public IniPart this[int index]
-        {
-            get
-            {
-                return parts[index];
             }
         }
         #endregion
@@ -330,10 +320,9 @@ namespace Mini
         {
             get
             {
-                return parts;
+                return _parts.Values;
             }
         }
-
         #endregion
     }
 }

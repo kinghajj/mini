@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2013 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -18,7 +18,6 @@
 
 using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Information about this assembly is defined by the following attributes. 
@@ -29,7 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Mini")]
-[assembly: AssemblyCopyright("(C) 2010 Samuel Fredrickson")]
+[assembly: AssemblyCopyright("(C) 2013 Samuel Fredrickson")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

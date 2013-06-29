@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2013 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -28,7 +28,7 @@ namespace Mini
     /// </summary>
     public class IniSection : IniPart, ICollection<IniSetting>
     {
-        private List<IniPart> parts;
+        private readonly OrderedDictionaryList<string, IniPart> _parts = new OrderedDictionaryList<string, IniPart>();
 
         #region Constructors
         /// <summary>
@@ -40,13 +40,9 @@ namespace Mini
         /// <param name="comment">
         /// The section's comment.
         /// </param>
-        /// <param name="ini">
-        /// The document to which the section belongs.
-        /// </param>
         internal IniSection(string name, string comment)
             : base(1)
         {
-            parts = new List<IniPart>();
             Comment = comment;
             Name = name;
         }
@@ -57,7 +53,7 @@ namespace Mini
         /// <summary>
         /// Adds a setting to the section.
         /// </summary>
-        /// <param name="setting">The setting to add to the section.</param>
+        /// <param name="item">The setting to add to the section.</param>
         public void Add(IniSetting item)
         {
             AddPart(item);
@@ -68,17 +64,17 @@ namespace Mini
         /// </summary>
         public void Clear()
         {
-            parts.Clear();
+            _parts.Clear();
         }
 
         /// <summary>
         /// Determines whether a section contains a setting.
         /// </summary>
-        /// <param name="find">The setting to locate in the section.</param>
+        /// <param name="item">The setting to locate in the section.</param>
         /// <returns>true if the setting is found; otherwise false.</returns>
         public bool Contains(IniSetting item)
         {
-            return this.Any(setting => setting == item);
+            return HasSetting(item.Key);
         }
 
         /// <summary>
@@ -89,7 +85,7 @@ namespace Mini
         /// The one-dimensional Array that is the destination of the settings
         /// copied from the section. The Array must have zero-based indexing.
         /// </param>
-        /// <param name="i">
+        /// <param name="arrayIndex">
         /// The zero-based index in array at which copying begins.
         /// </param>
         public void CopyTo(IniSetting[] array, int arrayIndex)
@@ -109,13 +105,13 @@ namespace Mini
         /// <returns>true if a setting found, else false.</returns>
         public bool HasSetting(string key)
         {
-            return this.Any(setting => setting.Key == key);
+            return _parts.ContainsKey(key);
         }
 
         /// <summary>
         /// Removes the first occurrence of a specific setting from the section.
         /// </summary>
-        /// <param name="setting">
+        /// <param name="item">
         /// The setting to remove from the section.
         /// </param>
         /// <returns>
@@ -125,16 +121,16 @@ namespace Mini
         /// </returns>
         public bool Remove(IniSetting item)
         {
-            return parts.Remove(item);
+            return Remove(item.Key);
         }
 
         /// <summary>
         /// Removes a setting by its key.
         /// </summary>
-        /// <param name="sectionKey">The key of the setting to remove.</param>
+        /// <param name="settingKey">The key of the setting to remove.</param>
         public bool Remove(string settingKey)
         {
-            return Remove(FindSetting(settingKey));
+            return _parts.Remove(settingKey);
         }
         #endregion
 
@@ -145,7 +141,7 @@ namespace Mini
         /// <param name="part">The part to add.</param>
         internal void AddPart(IniPart part)
         {
-            parts.Add(part);
+            _parts.AddUnkeyed(part);
         }
 
         /// <summary>
@@ -157,7 +153,7 @@ namespace Mini
             WriteNewLines(writer, NewLines);
             IniComment.Write(Comment, writer, false);
             writer.WriteLine("[{0}]", Name);
-            foreach(var part in parts)
+            foreach(var part in _parts.Values)
                 part.Write(writer);
         }
         #endregion
@@ -166,11 +162,13 @@ namespace Mini
         /// <summary>
         /// Finds a setting by key.
         /// </summary>
-        /// <param name="name">The key of the setting to find.</param>
+        /// <param name="key">The key of the setting to find.</param>
         /// <returns>The found setting or null.</returns>
         private IniSetting FindSetting(string key)
         {
-            return this.FirstOrDefault(setting => setting.Key == key);
+            IniPart ret;
+            _parts.TryGetValue(key, out ret);
+            return ret == null ? null : ret as IniSetting;
         }
         #endregion
         #endregion
@@ -184,7 +182,7 @@ namespace Mini
         /// </returns>
         public IEnumerator<IniSetting> GetEnumerator()
         {
-            return parts.OfType<IniSetting>().GetEnumerator();
+            return _parts.Values.OfType<IniSetting>().GetEnumerator();
         }
 
         /// <summary>
@@ -215,21 +213,10 @@ namespace Mini
                 if(found == null)
                 {
                     found = new IniSetting(key, string.Empty);
-                    parts.Add(found);
+                    _parts.Add(key, found);
                 }
 
                 return found;
-            }
-        }
-
-        /// <summary>
-        /// Gets a section's setting via its index.
-        /// </summary>
-        public IniPart this[int index]
-        {
-            get
-            {
-                return parts[index];
             }
         }
         #endregion
@@ -251,7 +238,7 @@ namespace Mini
         {
             get
             {
-                return parts.Count;
+                return _parts.Count;
             }
         }
 

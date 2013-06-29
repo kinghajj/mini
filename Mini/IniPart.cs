@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 Samuel Fredrickson <kinghajj@gmail.com>
+/* Copyright (C) 2013 Samuel Fredrickson <kinghajj@gmail.com>
  * 
  * This file is part of Mini, an INI library for the .NET framework.
  *
@@ -34,7 +34,7 @@ namespace Mini
         /// Writes the given number of newlines to the text writer.
         /// </summary>
         /// <param name="writer">What to write the newlines to.</param>
-        /// <param name="newlines">How many newlines to write.</param>
+        /// <param name="newLines">How many newlines to write.</param>
         protected static void WriteNewLines(TextWriter writer, int newLines)
         {
             //System.Console.WriteLine("Writing {0} newlines.", newlines);
@@ -45,7 +45,7 @@ namespace Mini
         /// <summary>
         /// The most abstract constructor for all INI parts.
         /// </summary>
-        /// <param name="newlines">How many newlines should occur before the part by default.</param>
+        /// <param name="newLines">How many newlines should occur before the part by default.</param>
         internal IniPart(int newLines)
         {
             // Assume that there should be a newline

@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mini", "Mini\Mini.csproj", "{32533B60-3A4F-41E5-A8A5-782F75AAD70D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mini.Test", "Mini.Test\Mini.Test.csproj", "{325E64F4-E503-4D77-85D5-9E4C3D918A66}"
