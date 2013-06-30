@@ -39,7 +39,7 @@ namespace Mini
     /// <summary>
     /// Contains information on a INI pattern.
     /// </summary>
-    internal class IniPattern
+    internal struct IniPattern
     {
         /// <summary>
         /// Gets or sets the comment of an INI pattern.
@@ -123,13 +123,6 @@ namespace Mini
             };
         }
 
-        private readonly IniPatternKind[] _kindsWithPatterns =
-        {
-            IniPatternKind.Comment,
-            IniPatternKind.Section,
-            IniPatternKind.Setting,
-        };
-
         /// <summary>
         /// Returns the kind of pattern that matches the input.
         /// </summary>
@@ -144,48 +137,17 @@ namespace Mini
             }
 
             // Try to match the input against all known INI kinds.
-            foreach (IniPatternKind kind in _kindsWithPatterns)
+            foreach (var pattern in Patterns)
             {
-                // If there's no pattern for this kind, skip it.
-                Regex pattern;
-                if ((pattern = GetPattern(kind)) == null)
-                    continue;
-
-                // If this pattern doesn't match the input, skip it.
                 Match match;
-                if (!(match = pattern.Match(input)).Success)
+                if (!(match = pattern.Item1.Match(input)).Success)
                     continue;
-
-                // If the match works, store it and break the loop.
-                foundKind = kind;
+                foundKind = pattern.Item2;
                 _lastMatch = match;
                 break;
             }
 
             return foundKind;
-        }
-
-        /// <summary>
-        /// Returns the pattern string for a kind of pattern.
-        /// </summary>
-        private static Regex GetPattern(IniPatternKind kind)
-        {
-            Regex pattern = null;
-
-            switch(kind)
-            {
-                case IniPatternKind.Comment:
-                    pattern = Comment;
-                    break;
-                case IniPatternKind.Section:
-                    pattern = Section;
-                    break;
-                case IniPatternKind.Setting:
-                    pattern = Setting;
-                    break;
-            }
-
-            return pattern;
         }
         #endregion
 
@@ -243,6 +205,13 @@ namespace Mini
              * any number of spaces.
              */
             @"(?<value>.*)\s*$", RegexOptions.Compiled);
+
+        private static readonly Tuple<Regex, IniPatternKind>[] Patterns =
+            {
+                Tuple.Create(Comment, IniPatternKind.Comment),
+                Tuple.Create(Section, IniPatternKind.Section),
+                Tuple.Create(Setting, IniPatternKind.Setting),
+            };
         #endregion
     }
 }
