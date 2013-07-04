@@ -105,10 +105,16 @@ namespace Mini
         /// <summary>
         /// Removes a section from the INI document.
         /// </summary>
+        /// <remarks>
+        /// The section is only removed if the object belongs to this document.
+        /// If an object from another document is passed, nothing happens.
+        /// </remarks>
         /// <param name="section">The section to remove.</param>
         public void Remove(IniSection section)
         {
-            Remove(section.Name);
+            var ourSection = FindSection(section.Name);
+            if(ourSection == section)
+                Remove(section.Name);
         }
 
         /// <summary>
