@@ -48,7 +48,7 @@ namespace Mini
         }
 
         /// <summary>
-        /// Opens an INI document from a stream.
+        /// Deserializes an INI document from a stream.
         /// </summary>
         /// <param name="stream">
         /// The stream from which to read the INI document.
@@ -62,7 +62,7 @@ namespace Mini
         }
 
         /// <summary>
-        /// Opens an INI document from a path with the given encoding.
+        /// Opens or creates an INI document from a path with the given encoding.
         /// </summary>
         /// <param name="path">
         /// The path to the INI document.
@@ -71,14 +71,14 @@ namespace Mini
         /// An encoding with which to interpret the INI document.
         /// </param>
         public IniDocument(string path, Encoding encoding)
-            : this(new StreamReader(path, encoding))
+            : this(new StreamReader(File.Open(path, FileMode.OpenOrCreate), encoding))
         {
             Path     = path;
             Encoding = encoding;
         }
 
         /// <summary>
-        /// Opens an INI document from a path with the default encoding.
+        /// Opens or creates an INI document from a path with the default encoding.
         /// </summary>
         /// <param name="path">
         /// The path to the INI document.
