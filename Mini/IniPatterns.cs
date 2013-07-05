@@ -96,11 +96,11 @@ namespace Mini
             string comment = string.Empty,
                    name    = string.Empty,
                    value   = string.Empty;
-            IniPatternKind kind;
 
             // Read a line from the stream and try to match it with a pattern.
             // If the match was successful,
-            if( (kind = MatchWithPattern(_stream.ReadLine())) != IniPatternKind.None)
+            var kind = MatchWithPattern(_stream.ReadLine());
+            if(kind != IniPatternKind.None && kind != IniPatternKind.Eof)
             {
                 Group group;
                 // If the match produced a comment, save it.
