@@ -47,6 +47,7 @@ namespace Mini.Test
     {
         static void Main()
         {
+            const int MAX_ITERS = 10000;
             var watch = new Stopwatch();
 
             // Time how long it takes to process the INI, and estimate how much
@@ -62,7 +63,7 @@ namespace Mini.Test
 
             // Time how long it takes to make many simple changes.
             watch.Start();
-            for(var i = 0; i < 1000; ++i)
+            for(var i = 0; i < MAX_ITERS; ++i)
             {
                 ini["User"]["Name"].Value = "md5sum";
                 ini["User"]["Password Hash"].Value = "e65b0dce58cbecf21e7c9ff7318f3b57";
@@ -80,6 +81,8 @@ namespace Mini.Test
             var serializer = new IniSerializer<Model2>();
             watch.Start();
             var model = serializer.Deserialize(ini);
+            for(var i = 0; i < MAX_ITERS - 1; ++i)
+                model = serializer.Deserialize(ini);
             model.Model.LastRun = DateTime.Now;
             watch.Stop();
             Console.WriteLine("{0} ms to deserialize.", watch.ElapsedMilliseconds);
@@ -87,7 +90,8 @@ namespace Mini.Test
 
             // Time how long it takes to serialize.
             watch.Start();
-            serializer.Serialize(model, ini);
+            for(var i = 0; i < MAX_ITERS; ++i)
+                serializer.Serialize(model, ini);
             watch.Stop();
             Console.WriteLine("{0} ms to serialize.", watch.ElapsedMilliseconds);
             watch.Reset();
