@@ -24,6 +24,25 @@ using System.Diagnostics;
 
 namespace Mini.Test
 {
+    [IniValueContainer]
+    class Model
+    {
+        [IniValue("Test", "Foo", "woot")]
+        public string Foo { get; set; }
+
+        [IniValue("Test", "Bar", "poot")]
+        public string Bar { get; set; }
+
+        [IniValue("Test", "LastRun")]
+        public DateTime LastRun { get; set; }
+    }
+
+    [IniValueContainer]
+    class Model2
+    {
+        public Model Model { get; set; }
+    }
+
     class Program
     {
         static void Main()
@@ -43,7 +62,7 @@ namespace Mini.Test
 
             // Time how long it takes to make many simple changes.
             watch.Start();
-            for(int i = 0; i < 1000; ++i)
+            for(var i = 0; i < 1000; ++i)
             {
                 ini["User"]["Name"].Value = "md5sum";
                 ini["User"]["Password Hash"].Value = "e65b0dce58cbecf21e7c9ff7318f3b57";
@@ -55,6 +74,22 @@ namespace Mini.Test
             }
             watch.Stop();
             Console.WriteLine("{0} ms to make changes.", watch.ElapsedMilliseconds);
+            watch.Reset();
+
+            // Time how long it takes to deserialize.
+            var serializer = new IniSerializer<Model2>();
+            watch.Start();
+            var model = serializer.Deserialize(ini);
+            model.Model.LastRun = DateTime.Now;
+            watch.Stop();
+            Console.WriteLine("{0} ms to deserialize.", watch.ElapsedMilliseconds);
+            watch.Reset();
+
+            // Time how long it takes to serialize.
+            watch.Start();
+            serializer.Serialize(model, ini);
+            watch.Stop();
+            Console.WriteLine("{0} ms to serialize.", watch.ElapsedMilliseconds);
             watch.Reset();
 
             // Time how long it takes to write the changes back to another file.

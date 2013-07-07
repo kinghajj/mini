@@ -44,7 +44,11 @@
     <Compile Include="IniPatterns.cs" />
     <Compile Include="IniDocument.cs" />
     <Compile Include="IniSection.cs" />
+    <Compile Include="IniSerializer.cs" />
+    <Compile Include="IniSerializerBase.cs" />
     <Compile Include="IniSetting.cs" />
+    <Compile Include="IniValueAttribute.cs" />
+    <Compile Include="IniValueContainerAttribute.cs" />
     <Compile Include="OrderedDictionaryList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
