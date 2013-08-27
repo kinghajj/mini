@@ -139,8 +139,8 @@ namespace Mini
             // Try to match the input against all known INI kinds.
             foreach (var pattern in Patterns)
             {
-                Match match;
-                if (!(match = pattern.Item1.Match(input)).Success)
+                var match = pattern.Item1.Match(input);
+                if (!match.Success)
                     continue;
                 foundKind = pattern.Item2;
                 _lastMatch = match;
@@ -164,7 +164,7 @@ namespace Mini
             {
                 var pattern = GetNextPattern();
                 if (pattern.Kind == IniPatternKind.Eof)
-                    break;
+                    yield break;
                 yield return pattern;
             }
         }
