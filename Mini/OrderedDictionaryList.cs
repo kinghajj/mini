@@ -31,7 +31,7 @@ namespace Mini
     /// can be inserted without a key. When <c>Values</c> is retrieved, the values in the dictionary and list are
     /// combined and sorted by their indices; therefore, it's an O(n log n) operation.</para>
     /// <para><c>System.UInt64</c> is the type of the items' indices, so overflow shouldn't be a problem in
-    /// practice.</para>
+    /// practice. This data structure is not thread-safe.</para>
     /// </remarks>
     /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
