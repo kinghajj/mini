@@ -35,7 +35,7 @@ namespace Mini
     /// </remarks>
     /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
-    public class OrderedDictionaryList<TKey, TValue> : IDictionary<TKey, TValue>
+    public class OrderedDictionaryList<TKey, TValue> : ICollection<TValue>, IDictionary<TKey, TValue>
     {
         private readonly IDictionary<TKey, Node> _dict = new Dictionary<TKey, Node>();
         private readonly ICollection<Node> _unkeyed = new LinkedList<Node>();
@@ -196,6 +196,33 @@ namespace Mini
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+        #endregion
+
+        #region ICollection implementation
+        public void Add(TValue item)
+        {
+            AddUnkeyed(item);
+        }
+
+        public bool Contains(TValue item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CopyTo(TValue[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(TValue item)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator()
+        {
+            return Values.GetEnumerator();
         }
         #endregion
     }
