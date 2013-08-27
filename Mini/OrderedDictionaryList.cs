@@ -76,6 +76,24 @@ namespace Mini
             _unkeyed.Add(CreateNode(value));
         }
 
+        /// <summary>
+        /// Get a sequence of all values in the order in which they were added.
+        /// </summary>
+        /// <remarks>
+        /// This concatenates then sorts the values, so it requires O(n log n) time.
+        /// This sorting occurs on an array that is a copy of the internal nodes,
+        /// requiring O(n) space.
+        /// </remarks>
+        public IEnumerable<TValue> Values
+        {
+            get
+            {
+                var nodes = _dict.Values.Concat(_unkeyed).ToArray();
+                Array.Sort(nodes);
+                return nodes.Select(n => n.Value);
+            }
+        }
+
         #region IDictionary implementation
         public void Add(TKey key, TValue value)
         {
@@ -105,13 +123,11 @@ namespace Mini
             return ret;
         }
 
-        public ICollection<TValue> Values
+        ICollection<TValue> IDictionary<TKey, TValue>.Values
         {
             get
             {
-                var nodes = _dict.Values.Concat(_unkeyed).ToArray();
-                Array.Sort(nodes);
-                return nodes.Select(n => n.Value).ToList();
+                return Values.ToList();
             }
         }
 
