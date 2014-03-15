@@ -223,8 +223,8 @@ namespace Mini
 
         public bool Remove(TValue item)
         {
-            var dictMatches = _dict.Where(p => p.Value.Value.Equals(item));
-            var unkeyedMatches = _unkeyed.Where(n => n.Value.Equals(item));
+            var dictMatches = _dict.Where(p => p.Value.Value.Equals(item)).ToArray();
+            var unkeyedMatches = _unkeyed.Where(n => n.Value.Equals(item)).ToArray();
             var result = dictMatches.Aggregate(true, (current, match) => _dict.Remove(match.Key) || current);
             return unkeyedMatches.Aggregate(result, (current, match) => _unkeyed.Remove(match) || current);
         }
