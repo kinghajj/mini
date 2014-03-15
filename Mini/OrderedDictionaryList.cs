@@ -207,17 +207,26 @@ namespace Mini
 
         public bool Contains(TValue item)
         {
-            throw new NotImplementedException();
+            return
+                _dict.Values.Any(n => n.Value.Equals(item)) ||
+                _unkeyed.Any(n => n.Value.Equals(item));
         }
 
         public void CopyTo(TValue[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            var i = 0;
+            var len = array.Length;
+            foreach (var val in (IEnumerable<TValue>)this)
+                if (i >= len) break;
+                else array[i++] = val;
         }
 
         public bool Remove(TValue item)
         {
-            throw new NotImplementedException();
+            var dictMatches = _dict.Where(p => p.Value.Value.Equals(item));
+            var unkeyedMatches = _unkeyed.Where(n => n.Value.Equals(item));
+            var result = dictMatches.Aggregate(true, (current, match) => _dict.Remove(match.Key) || current);
+            return unkeyedMatches.Aggregate(result, (current, match) => _unkeyed.Remove(match) || current);
         }
 
         IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator()
