@@ -78,7 +78,7 @@ namespace Mini.Test
             watch.Reset();
 
             // Time how long it takes to deserialize.
-            var serializer = new IniSerializer<Model2>();
+            var serializer = IniSerializer<Model2>.New();
             watch.Start();
             var model = serializer.Deserialize(ini);
             for(var i = 0; i < MAX_ITERS - 1; ++i)

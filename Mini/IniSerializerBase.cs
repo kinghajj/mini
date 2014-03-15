@@ -47,6 +47,8 @@ namespace Mini
         private static readonly Type StringType = typeof (string);
 
         internal protected static readonly object Lock = new object();
+        internal protected static IDictionary<Type, IniSerializerBase> Products = new Dictionary<Type, IniSerializerBase>();
+        internal protected static Type IniValueContainerAttributeType = typeof (IniValueContainerAttribute);
 
         internal protected static object DeserializeType(Type type, IniDocument ini)
         {
@@ -102,7 +104,7 @@ namespace Mini
             // if already completed or processing this type, ignore
             if (Completed.Contains(type) || Processing.Contains(type))
                 return;
-            Contract.Requires(type.GetCustomAttributes(false).Any(attr => attr.GetType() == typeof(IniValueContainerAttribute)));
+            Contract.Requires(type.GetCustomAttributes(false).Any(attr => attr.GetType() == IniValueContainerAttributeType));
             // otherwise, now we are processing this type
             Processing.Add(type);
             var targetList = new List<Target>();

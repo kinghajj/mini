@@ -24,23 +24,41 @@ namespace Mini
     /// <summary>
     /// Serializes objects to and from INI documents.
     /// </summary>
+    /// <remarks>
+    /// Both the static and non-static methods of this class are thread-safe.
+    /// </remarks>
     /// <typeparam name="T">The type of object to serialize.</typeparam>
-    public class IniSerializer<T> : IniSerializerBase where T : new()
+    public class IniSerializer<T> : IniSerializerBase
     {
         private readonly Type _type;
 
-        public IniSerializer()
+        /// <summary>
+        /// Factory method for IniSerializers.
+        /// </summary>
+        /// <returns></returns>
+        public static IniSerializer<T> New()
+        {
+            lock (Lock)
+            {
+                IniSerializerBase ret;
+                if (!Products.TryGetValue(typeof (T), out ret))
+                {
+                    ret = new IniSerializer<T>();
+                    Products.Add(typeof(T), ret);
+                }
+                return (IniSerializer<T>) ret;
+            }
+        }
+
+        internal IniSerializer()
         {
             _type = typeof (T);
             var hasIniValueContainerAttr =
-                _type.GetCustomAttributes(false).Any(attr => attr.GetType() == typeof (IniValueContainerAttribute));
+                _type.GetCustomAttributes(false).Any(attr => attr.GetType() == IniValueContainerAttributeType);
             if(!hasIniValueContainerAttr)
                 throw new InvalidOperationException(
                     string.Format("Type \"{0}\" does not have the IniValueContainerAttribute.", _type));
-            lock (Lock)
-            {
-                Process(_type);
-            }
+            Process(_type);
         }
 
         /// <summary>
