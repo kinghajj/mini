@@ -55,7 +55,7 @@ namespace Mini
         /// Internally, the dictionary's values are actually Nodes.
         /// It also stores an index so that the nodes can be ordered.
         /// </summary>
-        private class Node : IComparable<Node>
+        private struct Node : IComparable<Node>
         {
             public TValue Value;
             public ulong Index;
@@ -119,7 +119,7 @@ namespace Mini
         {
             Node node;
             var ret = _dict.TryGetValue(key, out node);
-            value = node != null ? node.Value : default(TValue);
+            value = node.Value;
             return ret;
         }
 
