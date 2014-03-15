@@ -53,7 +53,9 @@ namespace Mini
         /// <returns>true if they are equal, else false.</returns>
         public bool Equals(IniSetting other)
         {
-            return GetHashCode() == other.GetHashCode();
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return string.Equals(Comment, other.Comment) && string.Equals(Key, other.Key) && string.Equals(Value, other.Value);
         }
 
         /// <summary>
@@ -63,9 +65,15 @@ namespace Mini
         /// <returns>true if they are equal, else false.</returns>
         public override bool Equals(object obj)
         {
-            var other = obj as IniSection;
-            return ReferenceEquals(this, obj) ||
-                (other != null && Equals(other));
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals(obj as IniSetting);
+        }
+
+        public override bool Equals(IniPart other)
+        {
+            return Equals(other as IniSetting);
         }
 
         /// <summary>
@@ -74,7 +82,13 @@ namespace Mini
         /// <returns>The setting's hash code.</returns>
         public override int GetHashCode()
         {
-            return Comment.GetHashCode() ^ Key.GetHashCode() ^ Value.GetHashCode();
+            unchecked
+            {
+                var hashCode = Comment.GetHashCode();
+                hashCode = (hashCode*397) ^ Key.GetHashCode();
+                hashCode = (hashCode*397) ^ Value.GetHashCode();
+                return hashCode;
+            }
         }
 
         /// <summary>

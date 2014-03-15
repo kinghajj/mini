@@ -29,7 +29,7 @@ namespace Mini
     /// other INI parts keep track of their comments separately, but they do use
     /// this class to write their comments to an output stream.
     /// </remarks>
-    public class IniComment : IniPart
+    public class IniComment : IniPart, IEquatable<IniComment>
     {
         #region Constructors
         /// <summary>
@@ -96,6 +96,27 @@ namespace Mini
 
             if(endWithNewline)
                 writer.WriteLine();
+        }
+        #endregion
+        #region Public
+        public bool Equals(IniComment other)
+        {
+            return !ReferenceEquals(other, null) && Comment == other.Comment;
+        }
+
+        public override bool Equals(IniPart other)
+        {
+            return Equals(other as IniComment);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as IniComment);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Comment != null ? Comment.GetHashCode() : 0);
         }
         #endregion
         #endregion

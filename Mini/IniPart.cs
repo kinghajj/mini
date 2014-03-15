@@ -16,6 +16,7 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.IO;
 
 namespace Mini
@@ -28,8 +29,10 @@ namespace Mini
     /// they can be written to an output stream, so that's all that's required
     /// currently. Later, other methods may be required.
     /// </remarks>
-    public abstract class IniPart
+    public abstract class IniPart : IEquatable<IniPart>
     {
+        public abstract bool Equals(IniPart other);
+
         /// <summary>
         /// Writes the given number of newlines to the text writer.
         /// </summary>

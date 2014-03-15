@@ -32,7 +32,7 @@ namespace Mini
     /// This is the core class of the library. It is the one and only entrypoint
     /// into the library, and, hopefully, is easy to use.
     /// </remarks>
-    public class IniDocument : IEnumerable<IniSection>
+    public class IniDocument : IEnumerable<IniSection>, IEquatable<IniDocument>
     {
         private readonly OrderedDictionaryList<string, IniPart> _parts;
 
@@ -91,6 +91,11 @@ namespace Mini
 
         #region Methods
         #region Public
+        public bool Equals(IniDocument other)
+        {
+            return !ReferenceEquals(other, null) && ((IEnumerable<IniPart>) _parts).SequenceEqual(other._parts);
+        }
+
         /// <summary>
         /// Determines whether an IniDocument contains an IniSection with the given
         /// name.

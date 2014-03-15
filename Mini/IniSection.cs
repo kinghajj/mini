@@ -16,6 +16,7 @@
  * along with Mini. If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +27,7 @@ namespace Mini
     /// <summary>
     /// Represents a section in an INI document.
     /// </summary>
-    public class IniSection : IniPart, ICollection<IniSetting>
+    public class IniSection : IniPart, ICollection<IniSetting>, IEquatable<IniSection>
     {
         private readonly OrderedDictionaryList<string, IniPart> _parts = new OrderedDictionaryList<string, IniPart>();
 
@@ -95,6 +96,16 @@ namespace Mini
                 if(arrayIndex >= array.Length) break;
                 array[arrayIndex++] = setting;
             }
+        }
+
+        public override bool Equals(IniPart other)
+        {
+            return Equals(other as IniSection);
+        }
+
+        public bool Equals(IniSection other)
+        {
+            return !ReferenceEquals(other, null) && ((IEnumerable<IniPart>) _parts).SequenceEqual(other._parts);
         }
 
         /// <summary>
