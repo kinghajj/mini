@@ -18,6 +18,7 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Information about this assembly is defined by the following attributes. 
@@ -41,7 +42,7 @@ using System.Runtime.InteropServices;
 // assembly, if desired. See the Mono documentation for more information about
 // signing.
 
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
+
+[assembly: InternalsVisibleTo("Mini.UnitTests")]

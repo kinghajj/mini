@@ -108,7 +108,7 @@ namespace Mini
                     comment = group.Value;
                 // If the match produced a name, save it.
                 if((group = _lastMatch.Groups["name"]) != null)
-                    name = group.Value;
+                    name = group.Value.Trim();
                 // If the match produced a value, save it.
                 if((group = _lastMatch.Groups["value"]) != null)
                     value = group.Value;
