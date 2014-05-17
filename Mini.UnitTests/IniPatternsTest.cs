@@ -1,35 +1,49 @@
 ﻿namespace Mini.UnitTests
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.IO;
-    using NUnit.Framework;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestFixture]
+    [TestClass]
     public class IniPatternsTest
     {
-        private const string IniDocument = @"[Section]
+        private const string IniDocument = 
+@"[Section]
 FirstKey=FirstValue
 SecondKey= SecondValue
 ThirdKey =ThirdValue
 FourthKey = FourthValue
- FifthKey=FifthValue";
+ FifthKey=FifthValue
+Sixth Key = Sixth Value";
 
-        //private IniPatterns _iniPatterns;
+        private static MemoryStream _iniMemoryStream;
+        private static IList<IniPattern> _patterns;
 
-        [SetUp]
-        public void Setup()
+        /// <summary>
+        /// Only set up the memory stream once per test class.
+        /// </summary>
+        [ClassInitialize]
+        public static void Setup(TestContext testContext)
         {
-            var memoryStream = CreateIniMemoryStream();
-            //_iniPatterns = new IniPatterns(new StreamReader(memoryStream));
+            _iniMemoryStream = CreateIniMemoryStream();
+            _patterns = new IniPatterns(new StreamReader(_iniMemoryStream)).ToList();
         }
 
-        [TearDown]
-        public void Teardown()
+        [ClassCleanup]
+        public static void Teardown()
         {
-            //_iniPatterns = null;
+            _patterns = null;
+
+            if (_iniMemoryStream != null)
+            {
+                _iniMemoryStream.Close();
+                _iniMemoryStream = null;
+            }
         }
 
-        private MemoryStream CreateIniMemoryStream()
+        private static MemoryStream CreateIniMemoryStream()
         {
             var memStream = new MemoryStream();
             var stringBytes = System.Text.Encoding.UTF8.GetBytes(IniDocument);
@@ -40,13 +54,46 @@ FourthKey = FourthValue
             return memStream;
         }
 
-        [Test]
-        public void Test()
+        [TestMethod]
+        public void FirstSetting_NoWhiteSpace_ExpectResultNotNull()
         {
-            //foreach (var result in _iniPatterns)
-            //{
-            //    Assert.That(result.Name, Is.Not.Null);
-            //}
+            // FirstKey=FirstValue
+            Assert.IsNotNull(_patterns[0]);
+        }
+
+        [TestMethod]
+        public void SecondSetting_ValueLeadingWhiteSpace_ExpectResultNotNull()
+        {
+            // SecondKey= SecondValue
+            Assert.IsNotNull(_patterns[1]);
+        }
+
+        [TestMethod]
+        public void ThirdSetting_KeyTrailingWhiteSpace_ExpectResultNotNull()
+        {
+            // ThirdKey =ThirdValue
+            Assert.IsNotNull(_patterns[2]);
+        }
+
+        [TestMethod]
+        public void FourthSetting_WhiteSpaceAroundEqualSign_ExpectResultNotNull()
+        {
+            // FourthKey = FourthValue
+            Assert.IsNotNull(_patterns[3]);
+        }
+
+        [TestMethod]
+        public void FifthSetting_KeyLeadingWhiteSpace_ExpectResultNotNull()
+        {
+            //  FifthKey=FifthValue
+            Assert.IsNotNull(_patterns[4]);
+        }
+
+        [TestMethod]
+        public void SixthSetting_WhiteSpaceEverywhere_ExpectResultNotNull()
+        {
+            // Sixth Key = Sixth Value
+            Assert.IsNotNull(_patterns[5]);
         }
     }
 }
