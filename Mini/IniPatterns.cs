@@ -108,7 +108,7 @@ namespace Mini
                     comment = group.Value;
                 // If the match produced a name, save it.
                 if((group = _lastMatch.Groups["name"]) != null)
-                    name = group.Value.Trim();
+                    name = group.Value;
                 // If the match produced a value, save it.
                 if((group = _lastMatch.Groups["value"]) != null)
                     value = group.Value;
@@ -200,7 +200,7 @@ namespace Mini
              * characters, which are the name, then any number of spaces, an
              * equal sign, then any number of spaces...
              */
-            new Regex(@"^\s*(?<name>.+)\s*=\s*" +
+            new Regex(@"^\s*(?<name>.*[^\s])\s*=\s*" +
             /* ...then any number of characters, which are the value, then by
              * any number of spaces.
              */
