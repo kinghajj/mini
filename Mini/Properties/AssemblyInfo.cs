@@ -41,7 +41,5 @@ using System.Runtime.InteropServices;
 // assembly, if desired. See the Mono documentation for more information about
 // signing.
 
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
