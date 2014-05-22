@@ -37,14 +37,20 @@ namespace Mini
         private readonly OrderedDictionaryList<string, IniPart> _parts;
 
         #region Constructors
+
+        public IniDocument(Encoding encoding)
+        {
+            _parts   = new OrderedDictionaryList<string, IniPart>();
+            Path     = "";
+            Encoding = encoding;
+        }
+
         /// <summary>
         /// Creates a new, blank INI document.
         /// </summary>
         public IniDocument()
+            : this(Encoding.Default)
         {
-            _parts   = new OrderedDictionaryList<string, IniPart>();
-            Path     = string.Empty;
-            Encoding = Encoding.Default;
         }
 
         /// <summary>
@@ -52,13 +58,11 @@ namespace Mini
         /// </summary>
         /// <param name="stream">
         /// The stream from which to read the INI document.
-        /// This stream will be closed before this method completes.
         /// </param>
         public IniDocument(TextReader stream)
             : this()
         {
             Parse(stream);
-            stream.Close();
         }
 
         /// <summary>
@@ -71,10 +75,13 @@ namespace Mini
         /// An encoding with which to interpret the INI document.
         /// </param>
         public IniDocument(string path, Encoding encoding)
-            : this(new StreamReader(File.Open(path, FileMode.OpenOrCreate), encoding))
+            : this(encoding)
         {
-            Path     = path;
-            Encoding = encoding;
+            Path = path;
+            using (var stream = new StreamReader(File.Open(path, FileMode.OpenOrCreate), encoding))
+            {
+                Parse(stream);
+            }
         }
 
         /// <summary>
