@@ -261,8 +261,7 @@ namespace Mini
         private static string JoinComments(string previous, string built,
                                            string last)
         {
-            return string.Join(Environment.NewLine,
-                               new[] { previous, built, last });
+            return string.Join(Environment.NewLine, previous, built, last);
         }
         #endregion
         #endregion

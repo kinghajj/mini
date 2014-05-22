@@ -67,8 +67,7 @@ namespace Mini
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals(obj as IniSetting);
+            return obj.GetType() == GetType() && Equals(obj as IniSetting);
         }
 
         public override bool Equals(IniPart other)
