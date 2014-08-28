@@ -11,7 +11,11 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright (C) 2013 Samuel Fredrickson</copyright>
+    <copyright>Copyright (C) 2014 Samuel Fredrickson</copyright>
     <tags>ini serialization</tags>
   </metadata>
+  <files>
+    <file src="LICENSE.txt" target="LICENSE.txt"/>
+    <file src="README.txt" target="README.txt"/>
+  </files>
 </package>
