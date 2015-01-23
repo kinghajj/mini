@@ -40,8 +40,19 @@ namespace Mini
             DefaultValue = defaultValue;
         }
 
+        /// <summary>
+        /// The section of the INI in which this value lies.
+        /// </summary>
         public string Section { get; set; }
+
+        /// <summary>
+        /// The key that holds this value.
+        /// </summary>
         public string Key { get; set; }
+
+        /// <summary>
+        /// A default value if none specified.
+        /// </summary>
         public string DefaultValue { get; set; }
     }
 }

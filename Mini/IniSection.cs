@@ -179,7 +179,7 @@ namespace Mini
         {
             IniPart ret;
             _parts.TryGetValue(key, out ret);
-            return ret == null ? null : ret as IniSetting;
+            return ret as IniSetting;
         }
         #endregion
         #endregion
@@ -218,7 +218,7 @@ namespace Mini
         {
             get
             {
-                IniSetting found = FindSetting(key);
+                var found = FindSetting(key);
 
                 // if not, create it and add it.
                 if(found == null)

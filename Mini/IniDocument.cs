@@ -38,6 +38,12 @@ namespace Mini
 
         #region Constructors
 
+        /// <summary>
+        /// Creates a new, blank INI document with a specific encoding.
+        /// </summary>
+        /// <param name="encoding">
+        /// An encoding with which to interpret the INI document.
+        /// </param>
         public IniDocument(Encoding encoding)
         {
             _parts   = new OrderedDictionaryList<string, IniPart>();
@@ -221,7 +227,7 @@ namespace Mini
                         if(section != null)
                         {
                             // Get this setting by its key.
-                            IniSetting setting = section[pattern.Name];
+                            var setting = section[pattern.Name];
                             // Set its comment and value.
                             setting.Comment = JoinComments(setting.Comment,
                                                            comment,
@@ -300,7 +306,7 @@ namespace Mini
         {
             get
             {
-                IniSection found = FindSection(name);
+                var found = FindSection(name);
 
                 // if not, create it and add it.
                 if(found == null)

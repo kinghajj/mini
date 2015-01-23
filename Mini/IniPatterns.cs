@@ -93,9 +93,9 @@ namespace Mini
         /// </summary>
         private IniPattern GetNextPattern()
         {
-            string comment = string.Empty,
-                   name    = string.Empty,
-                   value   = string.Empty;
+            string comment = "",
+                   name    = "",
+                   value   = "";
 
             // Read a line from the stream and try to match it with a pattern.
             // If the match was successful,
