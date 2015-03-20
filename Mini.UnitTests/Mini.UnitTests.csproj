@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="IniDocumentTest.cs" />
     <Compile Include="IniPatternsTest.cs" />
+    <Compile Include="IniSerializerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OrderedDictionaryListTest.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
