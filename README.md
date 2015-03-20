@@ -1,4 +1,4 @@
-Mini, an INI library for the .NET framework.
+# Mini, an INI library for the .NET framework.
 
 Mini is free software: you can redistribute it and/or modify it under the
 terms of the GNU Lesser General Public License as published by the Free
@@ -13,9 +13,7 @@ details.
 You should have received a copy of the GNU Lesser General Public License
 along with Mini. If not, see <http://www.gnu.org/licenses/>.
 
-================================================================================
-
-1. About Mini
+# About
 
 Mini is an INI library for the .NET framework. It aims to be small and easy-to-
 use while providing functionality lacking in other INI libraries. Specifically,
@@ -28,9 +26,7 @@ I started writing Mini because I thought it could be useful to use at my work.
 I tried using Nini, another INI library for the .NET framework, but it didn't
 have all the features I required, and hasn't been updated for some time.
 
-================================================================================
-
-2. How Mini Works
+# Parsing
 
 Mini is pretty simple. When you load an INI document, it's parsed into an
 internal structure. You can then change that structure programatically, then
@@ -70,9 +66,7 @@ lines is not stored, so when re-written, all comments are put before whatever
 they are associated with. You can also see that extraneous newlines are not
 kept.
 
-================================================================================
-
-3. How to Use Mini
+# Examples
 
 Using Mini is very straightforward.
 
@@ -80,9 +74,7 @@ Using Mini is very straightforward.
     ini["Section"]["Setting"].Value = "Foo";
     ini.Write();
 
-================================================================================
-
-4. How does it perform?
+# Performance
 
 On my computer, Mini can read and parse an INI document at about 5 MiB/s, and
 can write an in-memory INI document back to a file at about 20 MiB/s. The test
@@ -97,8 +89,6 @@ or setting by name are by repeating the same seven operations 1000 times. This
 takes about 100 milliseconds on my machine, which translates to 70,000
 operations per second.
 
-================================================================================
-
-5. What does "Mini" mean?
+# What does "Mini" mean?
 
 Maybe "Mini: INI .NET Interface"?
